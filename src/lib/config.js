@@ -1,6 +1,7 @@
 export const DEFAULT_LOCALE = 'en-GB';
 export const DEFAULT_MARKET = 'ETH-USD';
 export const DEFAULT_LEVERAGE = 50;
+export const ADDRESS_ZERO = '0x0000000000000000000000000000000000000000';
 export const BPS_DIVIDER = 10000;
 export const DEFAULT_MARKETS_SORT_KEY = ['market', false];
 export const DEFAULT_ORDERS_SORT_KEY = ['orderId', true];
@@ -13,6 +14,8 @@ export const CHAINDATA = {
 		label: 'localhost',
 		explorer: 'http://localhost:8545',
 		rpc: 'http://127.0.0.1:8545/',
+		currency: '', // USDC
+		currencyDecimals: 6, // USDC
 		contracts: {
 			Cap: '',
 			Store: '',

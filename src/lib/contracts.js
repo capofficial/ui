@@ -6,7 +6,7 @@ import { CHAINDATA } from './config'
 
 import { provider, signer, chainId, unsupportedNetwork } from './stores'
 
-export async function getContract(params) {
+export function getContract(params) {
 
 	let { name, hasSigner, address } = params;
 

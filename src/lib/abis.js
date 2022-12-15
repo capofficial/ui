@@ -24,6 +24,7 @@ const positionTuple = `tuple(
 )`;
 
 const marketTuple = `tuple(
+	string symbol,
 	address fee,
 	uint256 maxLeverage,
 	uint256 maxOI,
@@ -150,7 +151,7 @@ export const ABIS = {
 		`function withdraw(uint256)`,
 		`function addLiquidity(uint256)`,
 		`function removeLiquidity(uint256)`,
-		`function submitOrder(${orderTuple})`,
+		`function submitOrder(${orderTuple}, uint256, uint256)`,
 		`function updateOrder(uint256, uint256)`,
 		`function cancelOrder(uint256)`,
 		`function cancelOrders(uint256[] calldata)`,
@@ -162,7 +163,7 @@ export const ABIS = {
 		`function getAccruedFunding(string memory, uint256) view returns (int256)`
 	].concat(EVENT_ABIS),
 	Store: [
-		`function asset() view returns(address)`,
+		`function currency() view returns(address)`,
 		`function clp() view returns(address)`,
 		`function poolFeeShare() view returns(uint256)`,
 		`function keeperFeeShare() view returns(uint256)`,
