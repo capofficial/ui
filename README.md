@@ -1,8 +1,22 @@
 # CAP UI Web Client
 
-This repository contains the CAP v4 web client which includes the trading dashboard, pool page, CAP token staking page, and referrals page.
+## TODO
 
-CAP v4 is currently in private beta. We're looking for talented devs to help us fix bugs, add some features, and bulletproof the product for public release. Please read on to see how you can get involved!
+- [x] ABIs for new contracts
+- [x] APIs for new contracts
+- [x] Simplify: remove market search, sorting, etc.
+- [ ] Component: Account, showing balance, equity, locked margin, free margin, margin level, buttons to deposit and withdraw
+- [ ] Component: Deposit / Withdraw modal
+- [ ] Component: New Order
+- [ ] Component: Chart, with price history pulled from Chainlink APIs
+- [ ] Component: Ticker, showing selected market symbol, latest price, and funding rate
+- [ ] Component: Markets, showing list of market symbols with latest prices
+- [ ] Component: Positions, showing list of active positions
+- [ ] Component: Orders, showing list of active orders
+- [ ] Component: History, showing list of past trades, pulled from subgraph
+- [ ] Component: Pool, showing pool balance, buffer balance, user pool balance, add liquidity, remove liquidity
+- [ ] Component: Network selector (top-right)
+- [ ] Error strings should be synced with new contracts
 
 ## Running on your local machine
 
@@ -13,4 +27,4 @@ npm run dev
 
 ## Contributing
 
-You can submit an issue and associated pull request. Our main devs will review it and merge into the main branch for deployment.
+You can submit a PR. Our devs will review it and merge into the main branch for deployment.

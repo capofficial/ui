@@ -1,15 +1,5 @@
 <script>
 
-	/* TODO
-	OK - ABIs
-	OK - deposit / withdraw apis
-	OK - add / remove liquidity api and other apis
-	- trade page and components
-	- show balance, equity, locked margin, free margin, margin level, deposit, withdraw in UI, in account panel above new order
-	- simplify: remove market search, sorting remove account sorting, keep columns
-	- allow user to set their alchemy key in the settings
-	*/
-
 	import { onMount } from 'svelte'
 
 	import Modals from '@components/layout/Modals.svelte'
