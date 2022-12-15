@@ -1,6 +1,6 @@
 import { get } from 'svelte/store'
 import { parseError } from './errors'
-import { activeModal, toasts, showMarketList, activeError } from './stores'
+import { activeModal, toasts, activeError } from './stores'
 
 export function setPageTitle(title) {
 	document.title = `${title} | CAP`;
@@ -71,7 +71,6 @@ function hidePopovers() {
 		hideError();
 	} else {
 		hideModal();
-		showMarketList.set(false);
 	}
 }
 

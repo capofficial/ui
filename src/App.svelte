@@ -1,9 +1,9 @@
 <script>
 
 	/* TODO
-	- ABIs
-	- deposit / withdraw apis
-	- add / remove liquidity api and other apis
+	OK - ABIs
+	OK - deposit / withdraw apis
+	OK - add / remove liquidity api and other apis
 	- trade page and components
 	- show balance, equity, locked margin, free margin, margin level, deposit, withdraw in UI, in account panel above new order
 	- simplify: remove market search, sorting remove account sorting, keep columns
@@ -23,13 +23,13 @@
 	import { runAndInterval } from '@lib/utils'
 
 	import { listenToEvents } from '@api/listener'
-	import { getChainlinkPrices } from '@api/chainlink'
+	import { getMarketsWithPrices } from '@api/markets'
 
 	onMount(async () => {
 		loadRoute();
 		catchLinks((path) => navigateTo(path));
 		window.onpopstate = () => loadRoute();
-		runAndInterval(getChainlinkPrices, 10 * 1000);
+		runAndInterval(getMarketsWithPrices, 10 * 1000);
 	});
 
 	// Listener

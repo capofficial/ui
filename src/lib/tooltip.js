@@ -3,8 +3,6 @@ import 'tippy.js/dist/tippy.css';
 
 import { get } from 'svelte/store'
 
-import { showTooltips } from './stores'
-
 // from https://dev.to/danawoodman/svelte-quick-tip-using-actions-to-integrate-with-javascript-libraries-tippy-tooltips-2m94
 export default function tooltip(node, params = {}) {
   // Determine the title to show. We want to prefer
@@ -16,7 +14,7 @@ export default function tooltip(node, params = {}) {
   const label = node.getAttribute("aria-label");
   const content = custom || title || label;
   
-  if (!content || !get(showTooltips)) return;
+  if (!content) return;
 
   // Let's make sure the "aria-label" attribute
   // is set so our element is accessible:

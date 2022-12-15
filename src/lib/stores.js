@@ -6,12 +6,22 @@ import { DEFAULT_LOCALE, DEFAULT_MARKET, DEFAULT_CURRENCY, DEFAULT_LEVERAGE, BPS
 // Language
 export const locale = writable(getUserSetting('locale') || DEFAULT_LOCALE);
 
+// Currency
+export const currencyName = writable();
+
+// Settings
+export const showOrdersOnChart = writable(getUserSetting('showOrdersOnChart') == undefined ? false : getUserSetting('showOrdersOnChart'));
+export const showPositionsOnChart = writable(getUserSetting('showPositionsOnChart') == undefined ? false : getUserSetting('showPositionsOnChart'));
+
 // Router
 export const component = writable();
 export const pageName = writable();
 
 // Modal
 export const activeModal = writable();
+
+// Toasts
+export const toasts = writable([]);
 
 // Error
 export const activeError = writable();
@@ -26,6 +36,31 @@ export const unsupportedNetwork = writable();
 // Account
 export const balance = writable();
 export const allowance = writable();
+export const lockedMargin = writable();
+export const upl = writable();
+
+export const equity = derived([balance, upl], ([$balance, $upl]) => {
+	return $balance + $upl;
+}, 0);
+export const freeMargin = derived([equity, lockedMargin], ([$equity, $lockedMargin]) => {
+	return $equity - $lockedMargin;
+}, 0);
+export const marginLevel = derived([equity, lockedMargin], ([$equity, $lockedMargin]) => {
+	return $equity / $lockedMargin;
+}, 0);
+
+// Chart
+export const chartHeight = writable(getUserSetting('chartHeight') || 320);
+export const chartResolution = writable(getUserSetting('chartResolution') || 900)
+export const chartLoading = writable(false);
+export const hoveredOHLC = writable();
+export const tradesHeight = writable(getUserSetting('tradesHeight') || 250);
+
+// Pool
+export const poolBalance = writable();
+export const bufferBalance = writable();
+export const userPoolBalance = writable();
+export const poolWithdrawalFee = writable();
 
 // Markets
 export const selectedMarket = writable(getUserSetting('selectedMarket') || DEFAULT_MARKET);
@@ -45,33 +80,16 @@ export const price = writable();
 export const tpPrice = writable();
 export const slPrice = writable();
 export const hasTPSL = writable(false);
-export const leverage = writable(DEFAULT_LEVERAGE);
 export const isReduceOnly = writable(false);
 export const submittingOrder = writable(false);
 
-export const buyingPower = derived([balances, leverage, selectedAsset], ([$balances, $leverage, $selectedAsset]) => {
-	if (!$selectedAsset || !$balances[$selectedAsset] || !$leverage) return 0;
-	return $balances[$selectedAsset] * $leverage;
-}, 0);
+export const leverage = derived([selectedMarketInfo], ([$selectedMarketInfo]) => {
+	return $selectedMarketInfo?.maxLeverage;
+}, DEFAULT_LEVERAGE);
 
-export const maxSize = derived([balances, leverage, currentFeeRebate, selectedMarketInfo, selectedAsset], ([$balances, $leverage, $currentFeeRebate, $selectedMarketInfo, $selectedAsset]) => {
-	if (!$balances[$selectedAsset] || !$selectedMarketInfo) return 0;
-	if (!$currentFeeRebate) $currentFeeRebate = 0;
-
-	// console.log('maxSize recalc', $balances[$selectedAsset], $leverage, $currentFeeRebate, $selectedMarketInfo, $selectedAsset);
-	// console.log('$leverage', $leverage);
-	
-	let gasFee = 0;
-	if ($selectedAsset == 'ETH') gasFee = 0.002;
-
-	if (!$selectedMarketInfo.fee) return $balances[$selectedAsset] * $leverage * 1 - gasFee;
-
-	const balanceAfterFees = $balances[$selectedAsset] * (1 - $leverage * $selectedMarketInfo.fee / BPS_DIVIDER) - gasFee;
-
-	if (balanceAfterFees < 0) return 0;
-
-	return balanceAfterFees * $leverage * 1;
-
+export const maxSize = derived([freeMargin, leverage, selectedMarketInfo], ([$freeMargin, $leverage, $selectedMarketInfo]) => {
+	if (!$leverage || !$selectedMarketInfo || !$freeMargin) return 0;
+	return $freeMargin * $leverage * (1 - $selectedMarketInfo.fee / BPS_DIVIDER);
 }, 0);
 
 export const margin = derived([size, leverage], ([$size, $leverage]) => {
@@ -79,3 +97,17 @@ export const margin = derived([size, leverage], ([$size, $leverage]) => {
 	const margin = Math.ceil(10**8 * ($size || 0)) / (10**8 * $leverage);
 	return margin;
 }, 0);
+
+// Orders
+export const orders = writable([]);
+export const ordersColumnsToShow = writable(getUserSetting('ordersColumnsToShow') || ['timestamp', 'isLong', 'market', 'price', 'size', 'margin', 'orderType', 'isReduceOnly', 'tools']);
+
+// Positions
+export const positions = writable([]);
+export const positionsColumnsToShow = writable(getUserSetting('positionsColumnsToShow') || ['timestamp', 'isLong', 'market', 'price', 'size', 'margin', 'upl', 'funding', 'liqprice', 'tools']);
+
+// History
+export const history = writable([]);
+export const historyColumnsToShow = writable(getUserSetting('historyColumnsToShow') || ['timestamp', 'isLong', 'market', 'price', 'size', 'status', 'reason', 'pnl']);
+export const lastHistoryItemsCount = writable(0); // how many items were fetched on the last history page requested (used for infinite scroll)
+export const historyOrderStatusToShow = writable(getUserSetting('historyOrderStatusToShow') || ['cancelled', 'executed', 'liquidated']);

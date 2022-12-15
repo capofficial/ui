@@ -1,6 +1,6 @@
 import { get } from 'svelte/store'
 import { getContract } from '@lib/contracts'
-import { address, orders, selectedMarket, margin, size, price, orderType, isReduceOnly, isLong, hasTPSL, tpPrice, slPrice } from '@lib/stores'
+import { address, orders } from '@lib/stores'
 import { parseUnits, createOrderTuple } from '@lib/formatters'
 import { getChainData } from '@lib/utils'
 import { showToast, showError } from '@lib/ui'
@@ -12,49 +12,56 @@ export async function getUserOrders() {
 	orders.set([...await contract.getUserOrders(_address)].reverse());
 }
 
-export async function submitOrder() {
+export function orderSubmitted() {}
+export function closeOrderSubmitted() {}
 
-	const contract = getContract({name: 'Cap'});
+export async function submitOrder(params) {
 
-	// Params
-	const market = get(selectedMarket);
-	const _isLong = get(isLong);
+	const contract = getContract({name: 'Trade'});
+
+	let {
+		market,
+		isLong,
+		margin,
+		size,
+		price,
+		hasTPSL,
+		isReduceOnly,
+		orderType,
+		tpPrice,
+		slPrice
+	} = params;
 
 	let cleaningDecimals = getChainData('currencyDecimals');
 	if (cleaningDecimals > 10) cleaningDecimals = 10;
-	let marginCleaned = (Math.ceil(get(margin) * 10**cleaningDecimals) / 10**cleaningDecimals).toFixed(cleaningDecimals);
-	let sizeCleaned = (Math.floor(get(size) * 10**cleaningDecimals) / 10**cleaningDecimals).toFixed(cleaningDecimals);
+	let marginCleaned = (Math.ceil(margin * 10**cleaningDecimals) / 10**cleaningDecimals).toFixed(cleaningDecimals);
+	let sizeCleaned = (Math.floor(size * 10**cleaningDecimals) / 10**cleaningDecimals).toFixed(cleaningDecimals);
 
-	let _margin = parseUnits(marginCleaned);
-	const _size = parseUnits(sizeCleaned);
-	let _price = parseUnits(get(price), 18);
-	const _orderType = get(orderType);
-	const _isReduceOnly = get(isReduceOnly);
-	let _hasTPSL = get(hasTPSL);
+	margin = parseUnits(marginCleaned);
+	size = parseUnits(sizeCleaned);
+	price = parseUnits(price, 18);
 
-	if (_orderType == 0) _price = parseUnits(0);
-	if (_isReduceOnly) _margin = parseUnits(0);
+	if (orderType == 0) price = parseUnits(0, 18);
+	if (isReduceOnly) margin = parseUnits(0);
 
-	const _tpPrice = _hasTPSL ? parseUnits(get(tpPrice), 18) : 0;
-	const _slPrice = _hasTPSL ? parseUnits(get(slPrice), 18) : 0;
+	tpPrice = hasTPSL ? parseUnits(tpPrice, 18) : 0;
+	slPrice = hasTPSL ? parseUnits(slPrice, 18) : 0;
 
 	try {
 
-		let tx, receipt;
-
 		const orderTuple = createOrderTuple({
 			market,
-			isLong: _isLong,
-			margin: _margin,
-			size: _size,
-			price: _price,
-			orderType: _orderType,
-			isReduceOnly: _isReduceOnly
+			isLong,
+			margin,
+			size,
+			price,
+			orderType,
+			isReduceOnly
 		});
 
-		tx = await contract.submitOrder(orderTuple, _tpPrice, _slPrice);
+		let tx = await contract.submitOrder(orderTuple, tpPrice, slPrice);
 
-		receipt = await tx.wait();
+		let receipt = await tx.wait();
 
 		if (receipt && receipt.status == 1) {
 			showToast('Order submitted.');
@@ -67,16 +74,46 @@ export async function submitOrder() {
 
 }
 
-export async function updateOrder() {
-
-	
-
+export async function updateOrder(orderId, price) {
+	const contract = getContract({name: 'Trade'});
+	try {
+		let tx = await contract.updateOrder(orderId, parseUnits(price, 18));
+		let receipt = await tx.wait();
+		if (receipt && receipt.status == 1) {
+			showToast('Order updated.');
+			getUserOrders();
+		}
+	} catch(e) {
+		showError(e);
+	}
 }
 
 export async function cancelOrder(orderId) {
-
+	const contract = getContract({name: 'Trade'});
+	try {
+		let tx = await contract.cancelOrder(orderId);
+		let receipt = await tx.wait();
+		if (receipt && receipt.status == 1) {
+			showToast('Order cancelled.');
+			getUserOrders();
+		}
+	} catch(e) {
+		showError(e);
+	}
 }
 
 export async function cancelAllOrders() {
-
+	const contract = getContract({name: 'Trade'});
+	const _orders = get(orders);
+	const orderIds = _orders.map((order) => order.orderId);
+	try {
+		let tx = await contract.cancelOrders(orderIds);
+		let receipt = await tx.wait();
+		if (receipt && receipt.status == 1) {
+			showToast('Orders cancelled.');
+			getUserOrders();
+		}
+	} catch(e) {
+		showError(e);
+	}
 }

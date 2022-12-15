@@ -146,11 +146,13 @@ export const EVENT_ABIS = [
 
 export const ABIS = {
 	ERC20: erc20ABI,
-	Cap: [
+	Pool: [
+		`function addLiquidity(uint256)`,
+		`function removeLiquidity(uint256)`
+	],
+	Trade: [
 		`function deposit(uint256)`,
 		`function withdraw(uint256)`,
-		`function addLiquidity(uint256)`,
-		`function removeLiquidity(uint256)`,
 		`function submitOrder(${orderTuple}, uint256, uint256)`,
 		`function updateOrder(uint256, uint256)`,
 		`function cancelOrder(uint256)`,

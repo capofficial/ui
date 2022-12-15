@@ -1,14 +1,15 @@
 import { ethers } from 'ethers'
 import { DEFAULT_CHAIN_ID, CHAINDATA } from './config'
-import { chainId, signer, provider, address } from './stores'
+import { chainId, signer, provider, address, currencyName } from './stores'
 import { showToast, hideModal } from './ui'
 import { getChainData } from './utils'
 
 chainId.set(DEFAULT_CHAIN_ID);
-// let _provider = new ethers.providers.JsonRpcProvider(CHAINDATA[DEFAULT_CHAIN_ID].rpc);
-const alchemySettings = getChainData('alchemy');
-let _provider = new ethers.providers.AlchemyProvider(alchemySettings.network, alchemySettings.key);
+let _provider = new ethers.providers.JsonRpcProvider(CHAINDATA[DEFAULT_CHAIN_ID].rpc);
+// const alchemySettings = getChainData('alchemy');
+// let _provider = new ethers.providers.AlchemyProvider(alchemySettings?.network, alchemySettings?.key);
 provider.set(_provider);
+currencyName.set(getChainData('currencyName'));
 
 let _walletConnect;
 

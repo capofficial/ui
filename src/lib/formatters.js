@@ -2,7 +2,7 @@ import { get } from 'svelte/store'
 import { ethers } from 'ethers'
 import { ADDRESS_ZERO, BPS_DIVIDER } from './config'
 import { locale } from './stores'
-import { getLabelForAsset, getChainData } from './utils'
+import { getChainData } from './utils'
 
 export function formatUnits(amount, decimals) {
 	if (!amount) return 0;
@@ -176,51 +176,6 @@ export function formatGraphCandle(candle) {
 		formatUnits(candle.o) * 1,
 		formatUnits(candle.c) * 1
 	];
-
-}
-
-export function formatPoolStat(stat) {
-	if (!stat) return;
-	const asset = getLabelForAsset(stat.asset);
-	return {
-		startingBalance: stat.startingBalance,
-		balance: stat.balance,
-		deposits: stat.deposits,
-		withdrawals: stat.withdrawals,
-		asset: stat.asset,
-		assetLabel: asset,
-		timestamp: stat.timestamp,
-		period: stat.period
-	};
-}
-
-export function formatFeeStat(stat) {
-
-	if (!stat) return;
-
-	const asset = getLabelForAsset(stat.asset);
-	let units = 18;
-	if (asset == 'USDC') {
-		units = 6;
-	}
-
-	return {
-		id: stat.id,
-		asset: stat.asset,
-		assetLabel: asset,
-		timestamp: stat.timestamp,
-		period: stat.period,
-		market: stat.market,
-
-		total: 1*formatUnits(stat.total, units),
-		totalUsd: 1*formatUnits(stat.totalUsd, units),
-		rebates: 1*formatUnits(stat.rebates, units),
-		rebatesUsd: 1*formatUnits(stat.rebatesUsd, units),
-		toPool: 1*formatUnits(stat.toPool, units),
-		toPoolUsd: 1*formatUnits(stat.toPoolUsd, units),
-		toStakers: 1*formatUnits(stat.toStakers, units),
-		toStakersUsd: 1*formatUnits(stat.toStakersUsd, units)
-	};
 
 }
 
