@@ -4,6 +4,8 @@
 	import Connect from '../modals/Connect.svelte'
 	import CustomizeColumns from '../modals/CustomizeColumns.svelte'
 	import ClosePosition from '../modals/ClosePosition.svelte'
+	import Deposit from '../modals/Deposit.svelte'
+	import Withdraw from '../modals/Withdraw.svelte'
 	import AddLiquidity from '../modals/AddLiquidity.svelte'
 	import RemoveLiquidity from '../modals/RemoveLiquidity.svelte'
 	import MarketInfo from '../modals/MarketInfo.svelte'
@@ -28,11 +30,19 @@
 <ClosePosition data={$activeModal.data} />
 {/if}
 
+{#if $activeModal && $activeModal.name == 'Deposit'}
+<Deposit />
+{/if}
+
+{#if $activeModal && $activeModal.name == 'Withdraw'}
+<Withdraw />
+{/if}
+
 {#if $activeModal && $activeModal.name == 'AddLiquidity'}
 <AddLiquidity />
 {/if}
 
-{#if $activeModal && $activeModal.name == 'Withdraw'}
+{#if $activeModal && $activeModal.name == 'RemoveLiquidity'}
 <RemoveLiquidity />
 {/if}
 

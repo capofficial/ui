@@ -1,6 +1,8 @@
 <script>
 	import { formatForDisplay } from '@lib/formatters'
 	import { balance, upl, equity, lockedMargin, freeMargin, marginLevel } from '@lib/stores'
+
+	import { showModal } from '@lib/ui'
 </script>
 
 <style>
@@ -47,7 +49,7 @@
 		</div>
 	</div>
 	<div class="buttons">
-		<button>Deposit</button>
-		<button>Withdraw</button>
+		<button on:click|stopPropagation={() => {showModal('Deposit')}}>Deposit</button>
+		<button on:click|stopPropagation={() => {showModal('Withdraw')}}>Withdraw</button>
 	</div>
 </div>

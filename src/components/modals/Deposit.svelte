@@ -6,9 +6,8 @@
 
 	import { onMount } from 'svelte'
 
-	import { addLiquidity, getPoolWithdrawalFee } from '@api/pool'
-	import { approveCurrency, getUserAllowance } from '@api/account'
-	import { currencyName, allowance, poolWithdrawalFee } from '@lib/stores'
+	import { deposit, approveCurrency, getUserAllowance } from '@api/account'
+	import { currencyName, allowance } from '@lib/stores'
 	import { focusInput, hideModal } from '@lib/ui'
 
 	let amount, isSubmitting;
@@ -16,29 +15,22 @@
 	async function submit() {
 		if (!amount) return focusInput('Amount');
 		isSubmitting = true;
-		const success = await addLiquidity(amount);
+		const success = await deposit(amount);
 		if (success) hideModal();
 		isSubmitting = false;
 	}
 
 	onMount(() => {
 		getUserAllowance();
-		getPoolWithdrawalFee();
 		focusInput('Amount');
 	});
 
 </script>
 
 <style>
-	.note {
-		color: var(--text300);
-		line-height: 1.418;
-		font-size: 80%;
-		padding-bottom: 20px;
-	}
 </style>
 
-<Modal title='Add Liquidity' width={280}>
+<Modal title='Deposit' width={280}>
 	
 	<div class='container'>
 
@@ -47,14 +39,12 @@
 		<div class="group">
 			<Input label='Amount' bind:value={amount} />
 		</div>
-		
-		<div class='note'>There are no deposit fees.{#if $poolWithdrawalFee} The withdrawal fee is currently {$poolWithdrawalFee}%.{/if}</div>
 
 		<div>
 			{#if $allowance * 1 <= amount * 1}
 			<Button label={`Approve ${$currencyName}`} on:click={approveCurrency} />
 			{:else}
-			<Button isLoading={isSubmitting} label={`Add Liquidity`} />
+			<Button isLoading={isSubmitting} label={`Deposit`} />
 			{/if}
 			
 		</div>

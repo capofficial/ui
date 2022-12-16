@@ -66,7 +66,7 @@
 			{/if}
 
 			<div>
-				<Button isLoading={isSubmitting} label={`Withdraw`} />
+				<Button isLoading={isSubmitting} label={`Remove Liquidity`} />
 			</div>
 			
 		</form>
