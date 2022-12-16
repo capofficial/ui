@@ -19,6 +19,8 @@ The contracts that this UI interacts with are in the [protocol](https://github.c
 - [ ] Component: Orders, showing list of active orders
 - [ ] Subgraph: separate repo for a simple subgraph to pull historical trades
 - [ ] Component: History, showing list of past trades, pulled from subgraph
+- [ ] Easy trade sharing for both active positions and historical trades
+- [ ] Ability to export history to CSV, with a modal to determine the timeframe to export. This should probably use a web worker to avoid it blocking the UI in cases where the amount of items to export is big.
 - [ ] Component: Pool, showing pool balance, buffer balance, user pool balance, add liquidity, remove liquidity
 - [ ] Component: Network selector (top-right) to switch between chains
 - [ ] Error strings should be synced with new contracts
