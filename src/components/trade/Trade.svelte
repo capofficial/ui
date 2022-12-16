@@ -1,76 +1,49 @@
 <script>
 
-	import Ticker from './ticker/Ticker.svelte'
-	import Chart from './chart/Chart.svelte'
 	import Account from './account/Account.svelte'
 	import NewOrder from './new-order/NewOrder.svelte'
 	import Trades from './trades/Trades.svelte'
 	import Markets from './markets/Markets.svelte'
-
-	import { tradesHeight } from '@lib/stores'
 
 </script>
 
 <style>
 	.grid {
 		display: grid;
-		grid-template-rows: 70px 1fr 1fr var(--trades-height);
-		grid-template-columns: 320px 1fr 1fr 310px;
+		grid-template-rows: auto auto;
+		grid-template-columns: repeat(4, 1fr);
 		grid-template-areas: 
-			"ticker ticker ticker sidebar"
-			"markets chart chart sidebar"
-			"markets chart chart sidebar"
-			"trades trades trades sidebar";
+			"markets newOrder newOrder account"
+			"trades trades trades trades";
 		grid-gap: 1px;
-		height: calc(100vh - 80px);
-		background-color: var(--layer100);
+		background-color: var(--layerDark);
+		max-width: 1280px;
+		margin: 0 auto;
+		margin-top: 25px;
+		border: 1px solid var(--layerDark);
 	}
 
-	@media all and (max-width: 600px) {
-		.grid {
-			grid-template-rows: auto 300px 300px auto var(--trades-height);
-			grid-template-columns: 1fr;
-			grid-template-areas: 
-				"ticker"
-				"markets"
-				"chart"
-				"sidebar"
-				"trades";
-			grid-gap: 1px;
-			height: auto;
-		}
-	}
-
-	.ticker {
-		grid-area: ticker;
-		background-color: var(--layer0);
-	}
 	.markets {
 		grid-area: markets;
-		background-color: var(--layer0);
+		background-color: var(--layer50);
 	}
-	.chart {
-		grid-area: chart;
-		background-color: var(--layer0);
+	.new-order {
+		grid-area: newOrder;
+		background-color: var(--layer50);
 	}
 	.trades {
 		grid-area: trades;
-		overflow: hidden;
-		background-color: var(--layer0);
+		background-color: var(--layer50);
 	}
-	.sidebar {
-		grid-area: sidebar;
-		background-color: var(--layer0);
+	.account {
+		grid-area: account;
+		background-color: var(--layer50);
 	}
 </style>
 
-<div class='grid' style={`--trades-height: ${$tradesHeight}px`}>
-	<div class='ticker'><Ticker /></div>
+<div class='grid'>
 	<div class='markets'><Markets /></div>
-	<div class='chart'><Chart /></div>
-	<div class='sidebar'>
-		<Account />
-		<NewOrder />
-	</div>
+	<div class='new-order'><NewOrder /></div>
+	<div class='account'><Account /></div>
 	<div class='trades'><Trades /></div>
 </div>

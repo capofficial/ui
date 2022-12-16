@@ -17,7 +17,7 @@ export function closeOrderSubmitted() {}
 
 export async function submitOrder(params) {
 
-	const contract = getContract({name: 'Trade'});
+	const contract = getContract({name: 'Trade', hasSigner: true});
 
 	let {
 		market,
@@ -75,7 +75,7 @@ export async function submitOrder(params) {
 }
 
 export async function updateOrder(orderId, price) {
-	const contract = getContract({name: 'Trade'});
+	const contract = getContract({name: 'Trade', hasSigner: true});
 	try {
 		let tx = await contract.updateOrder(orderId, parseUnits(price, 18));
 		let receipt = await tx.wait();
@@ -89,7 +89,7 @@ export async function updateOrder(orderId, price) {
 }
 
 export async function cancelOrder(orderId) {
-	const contract = getContract({name: 'Trade'});
+	const contract = getContract({name: 'Trade', hasSigner: true});
 	try {
 		let tx = await contract.cancelOrder(orderId);
 		let receipt = await tx.wait();
@@ -103,7 +103,7 @@ export async function cancelOrder(orderId) {
 }
 
 export async function cancelAllOrders() {
-	const contract = getContract({name: 'Trade'});
+	const contract = getContract({name: 'Trade', hasSigner: true});
 	const _orders = get(orders);
 	const orderIds = _orders.map((order) => order.orderId);
 	try {

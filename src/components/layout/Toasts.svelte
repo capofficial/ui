@@ -10,7 +10,7 @@
 		position: fixed;
 		bottom: 10px;
 		left: var(--base-padding);
-		z-index: 101;
+		z-index: 2000;
 	}
 
 	.toast {

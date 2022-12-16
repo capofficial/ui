@@ -46,9 +46,10 @@
 		--ticker-height: 60px;
 
 		/* Layers (gray), from darkest to lightest */
-		--layer0: #1c1d1c;
+		--layerDark: rgb(25, 29, 32);
+		--layer0: rgb(29,34,38);
 		--layer25: #222322;
-		--layer50: #272827;
+		--layer50: rgb(36,41,46);
 		--layer100: #333433;
 		--layer200: #494a49;
 		--layer300: #606160;

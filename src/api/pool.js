@@ -6,7 +6,7 @@ import { formatUnits } from '@lib/formatters'
 import { showToast, showError } from '@lib/ui'
 
 export async function addLiquidity(amount) {
-	const contract = getContract({name: 'Pool'});
+	const contract = getContract({name: 'Pool', hasSigner: true});
 	try {
 		let tx = await contract.addLiquidity(amount);
 		let receipt = await tx.wait();
@@ -22,7 +22,7 @@ export async function addLiquidity(amount) {
 }
 
 export async function removeLiquidity(amount) {
-	const contract = getContract({name: 'Pool'});
+	const contract = getContract({name: 'Pool', hasSigner: true});
 	try {
 		let tx = await contract.withdraw(amount);
 		let receipt = await tx.wait();

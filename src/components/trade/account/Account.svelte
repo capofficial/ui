@@ -1,8 +1,27 @@
 <script>
+	import { onDestroy } from 'svelte';
+
 	import { formatForDisplay } from '@lib/formatters'
-	import { balance, upl, equity, lockedMargin, freeMargin, marginLevel } from '@lib/stores'
+	import { address, balance, upl, equity, lockedMargin, freeMargin, marginLevel } from '@lib/stores'
 
 	import { showModal } from '@lib/ui'
+	import { getUserBalance, getUserLockedMargin, getUserUpl } from '@api/account'
+
+	let dataTimeout;
+	function fetchData() {
+		if (!$address) return;
+		getUserBalance();
+		getUserLockedMargin();
+		getUserUpl();
+		dataTimeout = setTimeout(fetchData, 10 * 1000);
+	}
+
+	$: fetchData($address);
+
+	onDestroy(() => {
+		clearTimeout(dataTimeout);
+	});
+
 </script>
 
 <style>
@@ -45,7 +64,7 @@
 		</div>
 		<div class="row">
 			<div class="label">Margin Level</div>
-			<div class="value">{formatForDisplay($marginLevel)}%</div>
+			<div class="value">{$marginLevel == Infinity ? "∞" : `${formatForDisplay($marginLevel)}%`}</div>
 		</div>
 	</div>
 	<div class="buttons">

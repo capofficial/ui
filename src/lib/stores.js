@@ -40,13 +40,13 @@ export const lockedMargin = writable(0);
 export const upl = writable(0);
 
 export const equity = derived([balance, upl], ([$balance, $upl]) => {
-	return $balance + $upl;
+	return $balance * 1 + $upl * 1;
 }, 0);
 export const freeMargin = derived([equity, lockedMargin], ([$equity, $lockedMargin]) => {
-	return $equity - $lockedMargin;
+	return $equity - $lockedMargin * 1;
 }, 0);
 export const marginLevel = derived([equity, lockedMargin], ([$equity, $lockedMargin]) => {
-	return $equity * 100 / $lockedMargin;
+	return $equity * 100 / $lockedMargin * 1;
 }, 0);
 
 // Chart

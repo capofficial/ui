@@ -12,7 +12,7 @@
 		padding: var(--base-padding);
 		align-items: center;
 		justify-content: space-between;
-		border-bottom: 1px solid var(--layer100);
+		border-bottom: 1px solid var(--layerDark);
 	}
 	.left {
 		display: flex;

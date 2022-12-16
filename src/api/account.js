@@ -1,19 +1,20 @@
 import { get } from 'svelte/store'
 import { ethers } from 'ethers'
 import { getContract } from '@lib/contracts'
-import { address, balance, allowance, lockedMargin } from '@lib/stores'
-import { formatUnits } from '@lib/formatters'
+import { address, balance, allowance, lockedMargin, upl } from '@lib/stores'
+import { formatUnits, parseUnits } from '@lib/formatters'
 import { getChainData } from '@lib/utils'
 import { showToast, showError } from '@lib/ui'
 
 export async function deposit(amount) {
-	const contract = getContract({name: 'Trade'});
+	const contract = getContract({name: 'Trade', hasSigner: true});
 	try {
-		let tx = await contract.deposit(amount);
+		let tx = await contract.deposit(parseUnits(amount));
 		let receipt = await tx.wait();
 		if (receipt && receipt.status == 1) {
 			showToast('Deposit succeeded.');
 			getUserBalance();
+			return true;
 		}
 	} catch(e) {
 		showError(e);
@@ -21,13 +22,14 @@ export async function deposit(amount) {
 }
 
 export async function withdraw(amount) {
-	const contract = getContract({name: 'Trade'});
+	const contract = getContract({name: 'Trade', hasSigner: true});
 	try {
-		let tx = await contract.withdraw(amount);
+		let tx = await contract.withdraw(parseUnits(amount));
 		let receipt = await tx.wait();
 		if (receipt && receipt.status == 1) {
 			showToast('Withdrawal succeeded.');
 			getUserBalance();
+			return true;
 		}
 	} catch(e) {
 		showError(e);
@@ -51,7 +53,7 @@ export async function getUserLockedMargin() {
 export async function getUserUpl() {
 	const _address = get(address);
 	if (!_address) return;
-	const contract = getContract({name: 'Cap'});
+	const contract = getContract({name: 'Trade'});
 	upl.set(formatUnits(await contract.getUpl(_address)));
 }
 
