@@ -34,10 +34,10 @@ export const address = writable();
 export const unsupportedNetwork = writable();
 
 // Account
-export const balance = writable();
-export const allowance = writable();
-export const lockedMargin = writable();
-export const upl = writable();
+export const balance = writable(0);
+export const allowance = writable(0);
+export const lockedMargin = writable(0);
+export const upl = writable(0);
 
 export const equity = derived([balance, upl], ([$balance, $upl]) => {
 	return $balance + $upl;
@@ -46,7 +46,7 @@ export const freeMargin = derived([equity, lockedMargin], ([$equity, $lockedMarg
 	return $equity - $lockedMargin;
 }, 0);
 export const marginLevel = derived([equity, lockedMargin], ([$equity, $lockedMargin]) => {
-	return $equity / $lockedMargin;
+	return $equity * 100 / $lockedMargin;
 }, 0);
 
 // Chart
