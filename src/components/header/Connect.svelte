@@ -95,5 +95,4 @@
 		<a class='connect' on:click|stopPropagation={() => {showModal('Connect')}}>Connect</a>
 	{/if}
 
-	<a class='settings' on:click|stopPropagation={() => {showModal('Settings')}}>{@html GEAR_ICON}</a>
 </div>

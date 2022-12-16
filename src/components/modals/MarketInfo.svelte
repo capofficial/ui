@@ -1,4 +1,6 @@
 <script>
+
+	/* TODO: get appropriate market info from new contracts */
 	
 	import Modal from './Modal.svelte'
 

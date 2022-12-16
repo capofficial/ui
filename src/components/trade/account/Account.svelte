@@ -25,13 +25,24 @@
 </script>
 
 <style>
+	.header {
+		height: 60px;
+		display: flex;
+		align-items: center;
+		padding: 0 20px;
+		border-bottom: 1px solid var(--layerDark);
+		font-weight: 600;
+		text-transform: uppercase;
+		font-size: 85%;
+	}
 	.account {
-		padding: 20px;
+		
 	}
 	.data {
 		display: flex;
 		flex-direction: column;
 		row-gap: 5px;
+		padding: 20px;
 	}
 	.row {
 		display: flex;
@@ -41,6 +52,7 @@
 </style>
 
 <div class="account">
+	<div class="header">Account</div>
 	<div class="data">
 		<div class="row">
 			<div class="label">Balance</div>

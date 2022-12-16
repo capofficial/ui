@@ -1,4 +1,6 @@
 <script>
+
+	// TODO: this should be replaced by a panel on the pool page
 	
 	import Modal from './Modal.svelte'
 	import Input from '@components/layout/Input.svelte'
