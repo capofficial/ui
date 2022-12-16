@@ -17,7 +17,7 @@ The contracts that this UI interacts with are in the [protocol](https://github.c
 - [ ] Component: Positions, showing list of active positions
 - [ ] Component: Close Position modal
 - [ ] Component: Orders, showing list of active orders
-- [ ] Subgraph: separate repo for a simple subgraph to pull historical trades
+- [ ] Subgraph: a separate repo that includes a simple subgraph to query historical trades
 - [ ] Component: History, showing list of past trades, pulled from subgraph
 - [ ] Easy trade sharing for both active positions and historical trades
 - [ ] Ability to export history to CSV, with a modal to determine the timeframe to export. This should probably use a web worker to avoid it blocking the UI in cases where the amount of items to export is big.
