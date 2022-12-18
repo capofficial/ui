@@ -4,7 +4,7 @@
   import { scaleLinear } from "d3-scale";
 	import {formatForDisplay} from '@lib/formatters'
 
-  const leftOffset = 45;
+  const leftOffset = 50;
   const bottomOffset = 10;
 	let length;
   let pointsY = [];
@@ -20,7 +20,8 @@
     let points = [];
     try {
       let priceHistory = await getChainlinkPriceHistory(
-        "0x3607e46698d218b3a5cae44bf381475c0a5e2ca7"
+        // "0x3607e46698d218b3a5cae44bf381475c0a5e2ca7"
+				"0x942d00008d658dbb40745bbec89a93c253f9b882"
       );
       priceHistory = priceHistory.priceHistory.nodes;
 			priceHistory.reverse()
@@ -66,7 +67,7 @@
   <g class="axis y-axis">
 		{#each yTicks as tick}
 			<g class="tick tick-{tick}" transform="translate({3}, {yScale(tick)})">
-				<text x={-5}>{formatForDisplay(tick)}</text>
+				<text x={-6}>{formatForDisplay(tick)}</text>
 			</g>
 		{/each}
 		<g class="tick" transform="translate({leftOffset},0)">
