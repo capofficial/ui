@@ -40,6 +40,7 @@
     if (activeIndex > length) activeIndex = null;
     if (activeIndex < 0) activeIndex = null;
     activeIndex = Math.floor(+xScale.invert(x))
+    setTimeout(() => activeIndex = null, 2000)
   }
 
   let loading = true;
