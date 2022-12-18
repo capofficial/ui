@@ -2,6 +2,7 @@ import { BPS_DIVIDER } from '@lib/config'
 import { getContract } from '@lib/contracts'
 import { markets, fundingRate, OILong, OIShort } from '@lib/stores'
 import { formatUnits } from '@lib/formatters'
+import { CHAINLINK_URL, CHAINLINK_SCHEMA_NAME } from '../lib/config';
 
 export async function getMarketsWithPrices() {
 	const contract = getContract({name: 'Trade'});
@@ -26,4 +27,37 @@ export async function getOI(market) {
 	const contract = getContract({name: 'Store'});
 	OILong.set(formatUnits(await contract.getOILong(market)));
 	OIShort.set(formatUnits(await contract.getOIShort(market)));
+}
+
+export async function getChainlinkPriceHistory(contractAddress) {
+	try {
+		const response = await fetch(CHAINLINK_URL, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				query: `
+					query PriceHistoryQuery($schemaName: String!, $contractAddress: String!) {
+						priceHistory(schemaName: $schemaName, contractAddress: $contractAddress) {
+						nodes {
+							id
+							latestAnswer
+							blockNumber
+						}
+						}
+					}
+				`,
+				variables: {
+					schemaName: CHAINLINK_SCHEMA_NAME,
+					contractAddress: contractAddress
+				}
+			})
+		});
+		const json = await response.json();
+		const price = json?.data
+		return price;
+	} catch (e) {
+		console.error('/getChainlinkPriceHistory', e);
+	}
 }

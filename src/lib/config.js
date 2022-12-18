@@ -47,3 +47,5 @@ export const CHAINDATA = {
 		}
 	}
 }
+export const CHAINLINK_URL = "https://atlas-postgraphile.public.main.prod.cldev.sh/graphql"
+export const CHAINLINK_SCHEMA_NAME = "ethereum-mainnet-arbitrum-1";
