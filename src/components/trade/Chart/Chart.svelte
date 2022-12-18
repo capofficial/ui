@@ -2,13 +2,11 @@
   import { getChainlinkPriceHistory } from "@api/markets";
   import { onMount } from "svelte";
   import { scaleLinear } from "d3-scale";
-	import {formatForDisplay} from '@lib/formatters'
 
-  const leftOffset = 50;
-  const bottomOffset = 10;
+  const leftOffset = 0;
+  const bottomOffset = 0;
 	let length;
   let pointsY = [];
-  let pointsX = [];
 	let height = 0, width = 0;
 	let minY
 	let maxY
@@ -26,14 +24,7 @@
       priceHistory = priceHistory.priceHistory.nodes;
 			priceHistory.reverse()
 			length = priceHistory.length;
-      priceHistory = priceHistory.forEach((i) => {
-        points.push({
-          blockNumber: Number(i.blockNumber),
-          value: Math.ceil(Number(i.latestAnswer) / 10 ** 6) / 10 ** 2,
-        });
-        pointsY.push(Math.ceil(Number(i.latestAnswer) / 10 ** 6) / 10 ** 2);
-        pointsX.push(Number(i.blockNumber));
-      });
+      pointsY = priceHistory.map((i) => Math.ceil(Number(i.latestAnswer) / 10 ** 6) / 10 ** 2);
       maxY = Math.max(...pointsY);
       minY = Math.min(...pointsY);
       loading = false;
@@ -46,49 +37,21 @@
   $: yScale = scaleLinear()
     .domain([minY, maxY])
     .range([height - bottomOffset - 20, 0]);
-
-	$: xTicks = xScale.ticks(3)
-	$: yTicks = yScale.ticks(8)
+	$: linePath = `M${pointsY
+    .map((p, i) => `${xScale(i).toFixed(2)},${yScale(p).toFixed(2)}`)
+    .join('L')}`;
+	$: areaPath = `${linePath}L${xScale(length)},${yScale(minY)}L${xScale(0)},${yScale(minY)}Z`;
 </script>
 
 <svg>
   <g>
-		{#each pointsY as yPoint, i}
-			<line
-				class="chart-point"
-				x1={xScale(i) + 2}
-				x2={xScale(i + 1) + 2}
-				y1={yScale(yPoint)}
-				y2={yScale(pointsY[i + 1] || pointsY[i])}
-				stroke-width="0.3%"
-			/>
-		{/each}
+		<path class="path-line-longs" d={linePath} />
+		<path class="path-area-longs" d={areaPath} fill="url(#chart-line)"/>
 	</g>
-  <g class="axis y-axis">
-		{#each yTicks as tick}
-			<g class="tick tick-{tick}" transform="translate({3}, {yScale(tick)})">
-				<text x={-6}>{formatForDisplay(tick)}</text>
-			</g>
-		{/each}
-		<g class="tick" transform="translate({leftOffset},0)">
-			<line x1={2} y2=0 y1={yScale(minY) + bottomOffset} />
-		</g>
-	</g>
-	<g class="axis x-axis">
-		<!-- {#each xTicks as xTick, i}
-			<g
-				class="tick"
-				transform="translate({xScale(
-					xTick
-				)},{height - 5})"
-			>
-				<text x={0}>{pointsX[Math.floor((i + 1 < pointsX.length ? (xTicks[i] + xTicks[i + 1]) / 2 : xTicks[i]))]}</text>
-			</g>
-		{/each} -->
-		<g class="tick" transform={`translate(0,${yScale(minY) + bottomOffset})`}>
-			<line x2={"100%"} x1={leftOffset + 2} />
-		</g>
-	</g>
+	<linearGradient id="chart-line"gradientTransform="rotate(90)">
+		<stop offset="50%" stop-color="var(--primary)" />
+		<stop offset="90%" stop-color="var(--layer50)" />
+	</linearGradient>
 </svg>
 <style>
 	svg {
@@ -96,15 +59,16 @@
 		width: 100%;
 		min-height: 300px;
 	}
-	.chart-point {
+  .path-line-longs {
+    fill: none;
     stroke: var(--primary);
-    opacity: 1;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+    stroke-width: 1;
 	}
-	.axis > .tick > line {
-    stroke: #e2e2e2;
+  .path-area-longs {
+    fill: url(#chart-line);
+    opacity: 0.1;
   }
-	.tick > text {
-		fill: var(--text400)!important;
-	}
 
 </style>
