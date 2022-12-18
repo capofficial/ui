@@ -10,6 +10,7 @@
 	let height = 0, width = 0;
 	let minY
 	let maxY
+  let activeIndex = null; // hovered timestamp
 
 	onMount(async () => {
 		const dimensions = document.getElementById("chart").getBoundingClientRect();
@@ -32,6 +33,15 @@
       console.log(err);
     }
   });
+
+  const onMouseMove = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    if (activeIndex > length) activeIndex = null;
+    if (activeIndex < 0) activeIndex = null;
+    activeIndex = Math.floor(+xScale.invert(x))
+  }
+
   let loading = true;
   $: xScale = scaleLinear().domain([0, length]).range([leftOffset, width]);
   $: yScale = scaleLinear()
@@ -41,13 +51,27 @@
     .map((p, i) => `${xScale(i).toFixed(2)},${yScale(p).toFixed(2)}`)
     .join('L')}`;
 	$: areaPath = `${linePath}L${xScale(length)},${yScale(minY)}L${xScale(0)},${yScale(minY)}Z`;
+
+  $: toolTipCoords = () => {
+    let x = xScale(activeIndex)
+    let y = yScale(pointsY[activeIndex]) - 30
+    if (x < leftOffset + 50) x = 50
+    if (x > width - 60) x = width - 60
+    if (y < 0) y = 20
+    return [x, y]
+  }
 </script>
 
-<svg>
+<svg on:mousemove={onMouseMove}>
   <g>
 		<path class="path-line-longs" d={linePath} />
 		<path class="path-area-longs" d={areaPath} fill="url(#chart-line)"/>
 	</g>
+  {#if activeIndex > 0}
+    <circle cx={xScale(activeIndex)} cy={yScale(pointsY[activeIndex])} r="4" class="active-circle"/>
+    <rect x={toolTipCoords()[0] - 50} y={toolTipCoords()[1]} />      
+    <text x={toolTipCoords()[0]} y={toolTipCoords()[1]} dy="1em" text-anchor="middle" fill="red">${pointsY[activeIndex].toFixed(2)}</text>
+  {/if}
 	<linearGradient id="chart-line"gradientTransform="rotate(90)">
 		<stop offset="50%" stop-color="var(--primary)" />
 		<stop offset="90%" stop-color="var(--layer50)" />
@@ -70,5 +94,18 @@
     fill: url(#chart-line);
     opacity: 0.1;
   }
+  .active-circle {
+    fill: var(--primary);
+  }
+  rect {
+    width: 100px;
+    height: 20px;
+    fill: white;
+    opacity: 1
+  }
+  text {
+    fill: var(--layer25);
+  }
+
 
 </style>
