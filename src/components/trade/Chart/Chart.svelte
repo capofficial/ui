@@ -11,7 +11,6 @@
 	let minY
 	let maxY
   let activeIndex = null; // hovered timestamp
-  let tooltipTimer;
 
 	onMount(async () => {
 		const dimensions = document.getElementById("chart").getBoundingClientRect();
@@ -41,8 +40,6 @@
     if (activeIndex > length) activeIndex = null;
     if (activeIndex < 0) activeIndex = null;
     activeIndex = Math.floor(+xScale.invert(x))
-    clearTimeout(tooltipTimer);
-    tooltipTimer = setTimeout(() => activeIndex = null, 2000)
   }
 
   let loading = true;
@@ -65,7 +62,7 @@
   }
 </script>
 
-<svg on:mousemove={onMouseMove}>
+<svg on:mousemove={onMouseMove} on:mouseleave={() => activeIndex = null}>
   <g>
 		<path class="path-line-longs" d={linePath} />
 		<path class="path-area-longs" d={areaPath} fill="url(#chart-line)"/>
