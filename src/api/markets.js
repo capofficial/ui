@@ -1,8 +1,9 @@
+import {get} from 'svelte/store'
 import { BPS_DIVIDER } from '@lib/config'
 import { getContract } from '@lib/contracts'
-import { markets, fundingRate, OILong, OIShort } from '@lib/stores'
+import { markets, fundingRate, OILong, OIShort, chainId } from '@lib/stores'
 import { formatUnits } from '@lib/formatters'
-import { CHAINLINK_URL, CHAINLINK_SCHEMA_NAME } from '../lib/config';
+import { CHAINLINK_URL, CHAINDATA } from '../lib/config';
 
 export async function getMarketsWithPrices() {
 	const contract = getContract({name: 'Trade'});
@@ -31,6 +32,7 @@ export async function getOI(market) {
 
 export async function getChainlinkPriceHistory(contractAddress) {
 	try {
+		const _chainId = get(chainId);
 		const response = await fetch(CHAINLINK_URL, {
 			method: 'POST',
 			headers: {
@@ -49,7 +51,7 @@ export async function getChainlinkPriceHistory(contractAddress) {
 					}
 				`,
 				variables: {
-					schemaName: CHAINLINK_SCHEMA_NAME,
+					schemaName: CHAINDATA[_chainId].chainlinkSchema,
 					contractAddress: contractAddress
 				}
 			})

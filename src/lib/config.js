@@ -26,7 +26,8 @@ export const CHAINDATA = {
 			key: 'gDY8gANK8VJAg508BzJbdCpmZ4N43IZP',
 			network: 'arbitrum',
 			wsNetwork: 'arb-mainnet'
-		}
+		},
+		chainlinkSchema: "ethereum-mainnet-arbitrum-1"
 	},
 	42161: {
 		label: 'arbitrum',
@@ -44,8 +45,8 @@ export const CHAINDATA = {
 			key: 'gDY8gANK8VJAg508BzJbdCpmZ4N43IZP',
 			network: 'arbitrum',
 			wsNetwork: 'arb-mainnet'
-		}
+		},
+		chainlinkSchema: "ethereum-mainnet-arbitrum-1"
 	}
 }
 export const CHAINLINK_URL = "https://atlas-postgraphile.public.main.prod.cldev.sh/graphql"
-export const CHAINLINK_SCHEMA_NAME = "ethereum-mainnet-arbitrum-1";
