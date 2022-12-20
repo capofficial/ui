@@ -43,7 +43,7 @@
 
 <div class='grid'>
 	<div class='markets'><Markets /></div>
-	<div class='new-order' id='new-order-container'><NewOrder /></div>
+	<div class='new-order'><NewOrder /></div>
 	<div class='account'><Account /></div>
 	<div class='trades'><Trades /></div>
 </div>

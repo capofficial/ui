@@ -2,7 +2,8 @@
   import { selectedMarketInfo } from "@lib/stores";
   import { showModal } from "@lib/ui";
   import { INFO_ICON_CIRCLE } from "@lib/icons";
-  import Chart from '../Chart/Chart.svelte'
+  import Chart from "../Chart/Chart.svelte";
+  import CreateNewOrder from "./CreateNewOrder.svelte";
   /* TODO
 	- For a boilerplate, see Account.svelte
 	- Should have a header with the the selectedMarket and latest price (spaced between), as well as the funding rate
@@ -36,11 +37,14 @@
     </div>
     <div class="price">{$selectedMarketInfo.price}</div>
   </div>
-  <div class='chart'>
-	<div id='chart'>
-		<Chart />
-	</div>
-	</div>
+  <div class="chart">
+    <div id="chart">
+      <Chart />
+    </div>
+  </div>
+  <div>
+		<CreateNewOrder />
+  </div>
 </div>
 
 <style>
@@ -73,6 +77,7 @@
     width: 18px;
   }
   .chart {
-	padding: 10px;
+    padding: 10px;
+    border-bottom: 1px solid var(--layerDark);
   }
 </style>
