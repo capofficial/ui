@@ -37,13 +37,13 @@
   const onMouseMove = (e) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - rect.left;
-    if (activeIndex > length) activeIndex = null;
-    if (activeIndex < 0) activeIndex = null;
     activeIndex = Math.floor(+xScale.invert(x))
+    if (activeIndex >= length) activeIndex = null;
+    if (activeIndex < 0) activeIndex = null;
   }
 
   let loading = true;
-  $: xScale = scaleLinear().domain([0, length]).range([leftOffset, width]);
+  $: xScale = scaleLinear().domain([1, length + 1]).range([leftOffset, width]);
   $: yScale = scaleLinear()
     .domain([minY, maxY])
     .range([height - bottomOffset - 20, 0]);
@@ -70,7 +70,7 @@
   {#if activeIndex > 0}
     <circle cx={xScale(activeIndex)} cy={yScale(pointsY[activeIndex])} r="4" class="active-circle"/>
     <rect x={toolTipCoords()[0] - 50} y={toolTipCoords()[1]} />      
-    <text x={toolTipCoords()[0]} y={toolTipCoords()[1]} dy="1em" text-anchor="middle" fill="red">${pointsY[activeIndex].toFixed(2)}</text>
+    <text x={toolTipCoords()[0]} y={toolTipCoords()[1]} dy="1em" text-anchor="middle" fill="red">${(pointsY[activeIndex] || 0).toFixed(2)}</text>
   {/if}
 	<linearGradient id="chart-line"gradientTransform="rotate(90)">
 		<stop offset="50%" stop-color="var(--primary)" />
