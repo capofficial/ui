@@ -19,7 +19,6 @@
 		background-color: var(--layerDark);
 		max-width: 1280px;
 		margin: 0 auto;
-		margin-top: 25px;
 		border: 1px solid var(--layerDark);
 	}
 

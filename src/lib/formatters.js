@@ -152,15 +152,15 @@ export function formatMarket(market) {
 	if (!market) return;
 
 	return {
-		'Name': market.name,
-		'Category': market.category,
+		'Name': market.symbol,
+		'Category': 'Crypto',
 		'Chainlink Execution Allowed': market.allowChainlinkExecution ? 'Yes' : 'No',
 		'Fee': `${formatForDisplay(100 * market.fee / BPS_DIVIDER)}%`,
-		'Is Closed': market.isClosed ? 'Yes' : 'No',
-		'Liquidation Threshold': `${formatForDisplay(100 * market.liqThreshold / BPS_DIVIDER)}%`,
-		'Max Deviation vs Chainlink': `${formatForDisplay(100 * market.maxDeviation / BPS_DIVIDER)}%`,
+		// 'Is Closed': market.isClosed ? 'Yes' : 'No',
+		// 'Liquidation Threshold': `${formatForDisplay(100 * market.liqThreshold / BPS_DIVIDER)}%`,
+		// 'Max Deviation vs Chainlink': `${formatForDisplay(100 * market.maxDeviation / BPS_DIVIDER)}%`,
 		'Max Leverage': market.maxLeverage,
-		'Only Reduce-Only Allowed': market.isReduceOnly ? 'Yes' : 'No'
+		// 'Only Reduce-Only Allowed': market.isReduceOnly ? 'Yes' : 'No'
 	}
 
 }
