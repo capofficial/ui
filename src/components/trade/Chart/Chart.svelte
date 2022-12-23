@@ -2,6 +2,8 @@
   import { getChainlinkPriceHistory } from "@api/markets";
   import { onMount } from "svelte";
   import { scaleLinear } from "d3-scale";
+  import { selectedMarket } from '@lib/stores'
+  import {CHAINLINK_CONTRACT_ADDRESSES as Address} from '@lib/config'
 
   const leftOffset = 0;
   const bottomOffset = 0;
@@ -13,14 +15,21 @@
   let activeIndex = null; // hovered timestamp
 
 	onMount(async () => {
+    setChartDimensions()
+    window.addEventListener('resize', setChartDimensions);
+    return () => window.removeEventListener('resize', setChartDimensions);
+  });
+
+  function setChartDimensions() {
 		const dimensions = document.getElementById("chart").getBoundingClientRect();
 		height = dimensions.height
 		width = dimensions.width
-    let points = [];
+  }
+
+  async function getPriceHistory(market) {
     try {
       let priceHistory = await getChainlinkPriceHistory(
-        // "0x3607e46698d218b3a5cae44bf381475c0a5e2ca7"
-				"0x942d00008d658dbb40745bbec89a93c253f9b882"
+				market == 'BTC-USD' ? Address.BTC_USD : Address.ETH_USD
       );
       priceHistory = priceHistory.priceHistory.nodes;
 			priceHistory.reverse()
@@ -32,7 +41,9 @@
     } catch (err) {
       console.log(err);
     }
-  });
+  }
+
+  $: getPriceHistory($selectedMarket)
 
   const onMouseMove = (e) => {
     const rect = e.currentTarget.getBoundingClientRect();
