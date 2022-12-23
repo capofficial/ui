@@ -44,7 +44,7 @@
 			{#if $allowance * 1 <= amount * 1}
 			<Button label={`Approve ${$currencyName}`} on:click={approveCurrency} />
 			{:else}
-			<Button isLoading={isSubmitting} label={`Deposit`} />
+			<Button isLoading={isSubmitting} label={`Deposit ${$currencyName}`} />
 			{/if}
 			
 		</div>

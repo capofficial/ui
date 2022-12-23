@@ -1,7 +1,9 @@
+import {get} from 'svelte/store'
 import { BPS_DIVIDER } from '@lib/config'
 import { getContract } from '@lib/contracts'
-import { markets, fundingRate, OILong, OIShort } from '@lib/stores'
-import { formatUnits } from '@lib/formatters'
+import { markets, fundingRate, OILong, OIShort, chainId } from '@lib/stores'
+import { formatUnits, formatForDisplay } from '@lib/formatters'
+import { CHAINLINK_URL, CHAINDATA } from '../lib/config';
 
 export async function getMarketsWithPrices() {
 	const contract = getContract({name: 'Trade'});
@@ -10,7 +12,7 @@ export async function getMarketsWithPrices() {
 	let i = 0;
 	for (let marketInfo of result[0]) {
 		marketInfo = Object.assign({}, marketInfo);
-		marketInfo.price = result[1][i];
+		marketInfo.price = formatForDisplay(formatUnits(result[1][i], 18));
 		_markets[marketInfo.symbol] = marketInfo;
         i++;
 	}
@@ -26,4 +28,38 @@ export async function getOI(market) {
 	const contract = getContract({name: 'Store'});
 	OILong.set(formatUnits(await contract.getOILong(market)));
 	OIShort.set(formatUnits(await contract.getOIShort(market)));
+}
+
+export async function getChainlinkPriceHistory(contractAddress) {
+	try {
+		const _chainId = get(chainId);
+		const response = await fetch(CHAINLINK_URL, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				query: `
+					query PriceHistoryQuery($schemaName: String!, $contractAddress: String!) {
+						priceHistory(schemaName: $schemaName, contractAddress: $contractAddress) {
+						nodes {
+							id
+							latestAnswer
+							blockNumber
+						}
+						}
+					}
+				`,
+				variables: {
+					schemaName: CHAINDATA[_chainId].chainlinkSchema,
+					contractAddress: contractAddress
+				}
+			})
+		});
+		const json = await response.json();
+		const price = json?.data
+		return price;
+	} catch (e) {
+		console.error('/getChainlinkPriceHistory', e);
+	}
 }

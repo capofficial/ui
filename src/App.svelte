@@ -189,6 +189,24 @@
 		padding: 4px 10px;
 		width: 120px;
 	}
+	:global(button.primary, button.secondary) {
+		padding: 0 var(--base-padding);
+		height: 42px;
+		border-radius: var(--base-radius);
+		font-weight: 600;
+		color: var(--primary-darkest);
+		background-color: var(--primary);
+		white-space: nowrap;
+		font-size: 95%;
+	}
+	:global(button.secondary) {
+		background-color: var(--secondary);
+		color: var(--secondary-darkest);
+	}
+	:global(.buttons) {
+		display: flex;
+		justify-content: space-around;
+	}
 
 </style>
 
