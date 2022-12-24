@@ -81,7 +81,7 @@
 	svg {
 		height: 100%;
 		width: 100%;
-		min-height: 180px; 
+		min-height: 150px; 
 	}
   .path-line-longs {
     fill: none;

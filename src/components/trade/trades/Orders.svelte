@@ -8,70 +8,18 @@
 	- Order should show the market, direction, entry price, size, as well as X to close. Click on an order to show all details in a modal.
 	*/
 
-    import { XMARK_ICON } from '@lib/icons'
+  import { formatUnits, formatDate, formatSide, formatForDisplay, formatOrderType, formatMarketName } from '@lib/formatters'
+  import { XMARK_ICON, PENCIL_ICON } from '@lib/icons'
+  import { DEFAULT_ORDERS_SORT_KEY } from '@lib/config'
 
-    import { address } from '@lib/stores'
-    import { getUserOrders } from '@api/orders'
+  import Table from '@components/layout/table/Table.svelte'
+  import Row from '@components/layout/table/Row.svelte'
+  import Cell from '@components/layout/table/Cell.svelte'
 
-    let mockData = [
-		{
-			marketSymbol: "ETH/USD",
-			isLong: true,
-            entryPrice: 1243.43,
-            size: 45214,
-            type: "Market"
-		},
-        {
-			marketSymbol: "BTC/USD",
-			isLong: true,
-            entryPrice: 1243.43,
-            size: 45214,
-            type: "Limit"
-		},
-        {
-			marketSymbol: "EUR/USD",
-			isLong: false,
-            entryPrice: 1243.43,
-            size: 45214,
-            type: "Market"
-		},
-        {
-			marketSymbol: "SOL/USD",
-			isLong: false,
-            entryPrice: 1243.43,
-            size: 45214,
-            type: "Limit"
-		},
-    {
-			marketSymbol: "ETH/USD",
-			isLong: true,
-            entryPrice: 1243.43,
-            size: 45214,
-            type: "Market"
-		},
-        {
-			marketSymbol: "BTC/USD",
-			isLong: true,
-            entryPrice: 1243.43,
-            size: 45214,
-            type: "Limit"
-		},
-        {
-			marketSymbol: "EUR/USD",
-			isLong: false,
-            entryPrice: 1243.43,
-            size: 45214,
-            type: "Market"
-		},
-        {
-			marketSymbol: "SOL/USD",
-			isLong: false,
-            entryPrice: 1243.43,
-            size: 45214,
-            type: "Limit"
-		},
-    ]
+  export let allColumns;
 
+  import { address, orders } from '@lib/stores'
+  import { getUserOrders } from '@api/orders'
 
   let isLoading = true, t;
 
@@ -84,86 +32,44 @@
 
   $: fetchData($address);
 
+  let sortKey = "timestamp"
+
+  let columns = allColumns
+
 </script>
 
-<div class='orders'>
-	<!--<div class='header'>
-		<div class='label'>
-			Orders
-		</div>
-	</div>-->
-	<div class='simpletable'>
-		{#each mockData as data}
-		<div class='rows'>
-			<div>{data.marketSymbol}</div>
-            {#if data.isLong}
-                <div class='green'>Long</div>
-            {:else}
-                <div class='red'>Short</div>
-            {/if}
-            <div>{data.entryPrice}</div>
-            <div>{data.size}</div>
-            <div>{data.type}</div>
-            <div>✕</div>
-		</div>
+<Table
+	columns={columns}
+	isLoading={false}
+	isEmpty={$orders.length == 0}
+>
+  <div class='orders'>
+		{#each $orders as order}
+		<Row>
+      <Cell>{formatDate(order.timestamp)}</Cell>
+      <Cell hasClass={order.isLong ? 'green' : 'red'}>{formatSide(order.isLong)}</Cell>
+      <Cell><a href={`/trade/${order.market}`}>{formatMarketName(order.market)}</a></Cell>
+      <Cell>{formatUnits(order.price, 18)}</Cell>
+      <Cell>{formatUnits(order.size, 6)}</Cell>
+      <Cell>{formatUnits(order.margin, 6)}</Cell>
+      <Cell>{formatOrderType(order.orderType)}</Cell>
+      <Cell isTools={true}>
+				<a >{@html XMARK_ICON}</a>
+			</Cell>
+    </Row>
 		{/each}
 	</div>
-</div>
+</Table>
 
 <style>
 
-.header {
-    height: 60px;
-    display: flex;
-    align-items: center;
-    padding: 0 20px;
-    border-bottom: 1px solid var(--layerDark);
-    font-weight: 600;
-    text-transform: uppercase;
-    font-size: 85%;
-    justify-content: space-between;
-  }
+a {
+		color: var(--primary);
+		text-decoration: none;
+}
 
-  .label {
-    font-size: 16px;
-    display: flex;
-  }
+.orders {
 
-  .simpletable {
-    height: 212px;
-    overflow-y: auto;
-    scrollbar-color: var(--layer200);
-		scrollbar-width: thin;
-  }
-	.simpletable::-webkit-scrollbar-track {
-		background-color: transparent;
-		border-radius: 6px;
-	}
-	.simpletable::-webkit-scrollbar {
-		width: 5px;
-		background-color: transparent;
-	}
-	.simpletable::-webkit-scrollbar-thumb {
-		border-radius: 6px;
-		background-color: var(--layer200);
-	}
-
-  .rows {
-    height: 52px;
-    padding: 0 20px;
-    border-bottom: 1px solid var(--layer0-hover);
-    display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr)) 15px;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .green {
-    color: green;
-  }
-
-  .red {
-    color: red;
-  }
+}
 
 </style>

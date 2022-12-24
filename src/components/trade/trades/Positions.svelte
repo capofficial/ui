@@ -9,151 +9,71 @@
 		- The UPLs are pulled directly from the contract (in @api/positions: getUserPositionsWithUpls). No need to calculate them client side.
 	*/
 
-    import { XMARK_ICON } from '@lib/icons'
-
-    import { address } from '@lib/stores'
+    import { address, positions } from '@lib/stores'
     import { getUserPositionsWithUpls } from '@api/positions'
+    import { formatUnits, formatDate, formatSide, formatForDisplay, formatMarketName } from '@lib/formatters'
+    import { XMARK_ICON, PENCIL_ICON } from '@lib/icons'
+    import { DEFAULT_POSITIONS_SORT_KEY } from '@lib/config'
 
-    let mockData = [
-		{
-			marketSymbol: "ETH/USD",
-			isLong: true,
-            entryPrice: 1192.12,
-            size: 345350,
-            pnl: 2342.43,
-            pnlPercent: 32.89,
-		},
-        {
-			marketSymbol: "BTC/USD",
-			isLong: true,
-            entryPrice: 16789.43,
-            size: 123453,
-            pnl: 78378.43,
-            pnlPercent: 23.89,
-		},
-        {
-			marketSymbol: "BTC/USD",
-			isLong: true,
-            entryPrice: 16789.43,
-            size: 123453,
-            pnl: 78378.43,
-            pnlPercent: 23.89,
-		},
-        {
-			marketSymbol: "EUR/USD",
-			isLong: false,
-            entryPrice: 1.01,
-            size: 123447,
-            pnl: 4563.43,
-            pnlPercent: 12.89,
-		},
-        {
-			marketSymbol: "SOL/USD",
-			isLong: false,
-            entryPrice: 15.43,
-            size: 3245350,
-            pnl: 2452.43,
-            pnlPercent: 785.89,
-		},
-    ]
-  
+    import Table from '@components/layout/table/Table.svelte'
+	  import Row from '@components/layout/table/Row.svelte'
+	  import Cell from '@components/layout/table/Cell.svelte'
+
+    export let allColumns;
+
   let isLoading = true, t1;
 
   async function fetchData() {
 		clearTimeout(t1);
 		const done = await getUserPositionsWithUpls();
-		if (done) isLoading = false;
+ 		if (done) isLoading = false;
 		t1 = setTimeout(fetchData, 5000);
 	}
 
 	$: fetchData($address);
 
+  let sortKey = "timestamp"
+
+  let columns = allColumns
   
 
 </script>
 
-<div class='positions'>
-	<!-- <div class='header'>
-		<div class='label'>
-			Positions
-		</div>
-	</div> -->
-	<div class='simpletable'>
-		{#each mockData as data}
-		<div class='rows'>
-			<div>{data.marketSymbol}</div>
-			{#if data.isLong}
-                <div class='green'>Long</div>
-            {:else}
-                <div class='red'>Short</div>
-            {/if}
-            <div>{data.entryPrice}</div>
-            <div>{data.size}</div>
-            <div>{data.pnl}</div>
-            <div>✕</div>
-		</div>
+<Table
+	columns={columns}
+	isLoading={false}
+	isEmpty={$positions.length == 0}
+>
+
+  <div class='positions'>
+		{#each $positions as position}
+		<Row>
+      <Cell>{formatDate(position.timestamp)}</Cell>
+      <Cell hasClass={position.isLong ? 'green' : 'red'}>{formatSide(position.isLong)}</Cell>
+      <Cell><a href={`/trade/${position.market}`}>{formatMarketName(position.market)}</a></Cell>
+      <Cell>{formatUnits(position.price, 18)}</Cell>
+      <Cell>{formatUnits(position.size, 6)}</Cell>
+      <Cell>{formatUnits(position.margin, 6)}</Cell>
+      <Cell>{formatUnits(position.upl, 6)}</Cell>
+      <!--<Cell>{formatForDisplay(position.fundingTracker)}</Cell>-->
+      <Cell isTools={true}>
+				<a >{@html PENCIL_ICON}</a>
+				<a >{@html XMARK_ICON}</a>
+			</Cell>
+    </Row>
 		{/each}
 	</div>
-</div>
+</Table>
 
 <style>
 
-.header {
-    height: 60px;
-    display: flex;
-    align-items: center;
-    padding: 0 20px;
-    border-bottom: 1px solid var(--layerDark);
-    font-weight: 600;
-    text-transform: uppercase;
-    font-size: 85%;
-    justify-content: space-between;
-  }
+a {
+		color: var(--primary);
+		text-decoration: none;
+}
 
-  .label {
-    font-size: 16px;
-    display: flex;
-  }
+.positions {
 
-  .simpletable {
-    height: 212px;
-    overflow-y: auto;
-    scrollbar-color: var(--layer200);
-		scrollbar-width: thin;
-  }
-	.simpletable::-webkit-scrollbar-track {
-		background-color: transparent;
-		border-radius: 6px;
-	}
-	.simpletable::-webkit-scrollbar {
-		width: 5px;
-		background-color: transparent;
-	}
-	.simpletable::-webkit-scrollbar-thumb {
-		border-radius: 6px;
-		background-color: var(--layer200);
-	}
-
-  .rows {
-    height: 52px;
-    padding: 0 20px;
-    border-bottom: 1px solid var(--layer0-hover);
-    display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr)) 15px;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .rows:hover {
-	  background-color: var(--layer100);
-  }
-
-  .green {
-    color: green;
-  }
-
-  .red {
-    color: red;
-  }
+}
 
 </style>

@@ -19,7 +19,35 @@ import History from './History.svelte'
 import Orders from './Orders.svelte'
 import Positions from './Positions.svelte'
 
-let panel = 'positions'
+import { positions, orders } from '@lib/stores'
+
+let allColumns = {
+		orders: [
+			//{key: 'orderId', gridTemplate: '0.4fr', sortable: true},
+			{key: 'timestamp', gridTemplate: '1.75fr', sortable: true},
+			{key: 'isLong', gridTemplate: '0.5fr', sortable: true},
+			{key: 'market', gridTemplate: '1fr', sortable: true},
+			{key: 'price', gridTemplate: '0.85fr', sortable: true},
+			{key: 'size', gridTemplate: '1fr', sortable: true},
+			{key: 'margin', gridTemplate: '1fr', sortable: true},
+			{key: 'orderType', gridTemplate: '0.75fr', sortable: true},
+			//{key: 'isReduceOnly', gridTemplate: '0.75fr', sortable: true},
+			{key: 'tools', gridTemplate: '75px', sortable: false, permanent: true}
+		],
+		positions: [
+			{key: 'timestamp', gridTemplate: '1.75fr', sortable: true},
+			{key: 'isLong', gridTemplate: '0.5fr', sortable: true},
+			{key: 'market', gridTemplate: '1fr', sortable: true},
+			{key: 'price', gridTemplate: '0.85fr', sortable: true},
+			{key: 'size', gridTemplate: '1fr', sortable: true},
+			{key: 'margin', gridTemplate: '1fr', sortable: true},
+			{key: 'upl', gridTemplate: '0.75fr', sortable: true},
+			//{key: 'fundingTracker', gridTemplate: '1fr', sortable: true},
+			{key: 'tools', gridTemplate: '75px', sortable: false, permanent: true}
+		],
+	}
+
+let panel = 'orders'
 
 </script>
 
@@ -34,23 +62,28 @@ let panel = 'positions'
 		grid-gap: 1px;
 		background-color: var(--layerDark);
 		max-width: 1280px;
+		height: 312px;
 		margin: 0px auto;
 	}
 
 	.positions-orders {
 		grid-area: positions-orders;
+		height: 251px;
 	}
 
 	.positions {
 		grid-area: positions;
+		height: 251px;
 		background-color: var(--layer50);
 	}
 	.orders {
 		grid-area: orders;
+		height: 251px;
 		background-color: var(--layer50);
 	}
 	.history {
 		grid-area: history;
+		height: 311px;
 		background-color: var(--layer50);
 	}
 
@@ -87,11 +120,11 @@ let panel = 'positions'
 <div class='grid'>
 	<div class='positions-orders'>
 		<div class='nav'>
-			<a class:active={panel == 'positions'} on:click={() => {panel = 'positions'}}>Positions</a>
-			<a class:active={panel == 'orders'} on:click={() => {panel = 'orders'}}>Orders</a>
+			<a class:active={panel == 'positions'} on:click={() => {panel = 'positions'}}>Positions {#if $positions.length > 0}<span>({$positions.length})</span>{/if}</a>
+			<a class:active={panel == 'orders'} on:click={() => {panel = 'orders'}}>Orders {#if $orders.length > 0}<span>({$orders.length})</span>{/if}</a>
 		</div>
-		{#if panel == 'positions'}<div class='positions'><Positions /></div>{/if}
-		{#if panel == 'orders'}<div class='orders'><Orders /></div>{/if}
+		{#if panel == 'positions'}<div class='positions'><Positions allColumns={allColumns['positions']}/></div>{/if}
+		{#if panel == 'orders'}<div class='orders'><Orders allColumns={allColumns['orders']}/></div>{/if}
 	</div>		
 	<div class='history'><History /></div>
 </div>
