@@ -11,9 +11,9 @@
 
   let orderType;
   let sizeHighlighted;
-  console.log($balance)
   onMount(() => {
     orderType = getUserSetting("orderType");
+    if (!orderType) setOrderType('market')
     getUserBalance()
     price.set()
   });
