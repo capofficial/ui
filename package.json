@@ -4,43 +4,42 @@
 	"description": "CAP UI Client",
 	"main": "index.js",
 	"scripts": {
-	  "build": "rollup -c",
-	  "dev": "rollup -c -w",
-	  "start": "sirv build --single",
-	  "deploy-ipfs": "npm run build && npx ipfs-deploy build"
+		"build": "rollup -c",
+		"dev": "rollup -c -w",
+		"start": "sirv build --single",
+		"deploy-ipfs": "npm run build && npx ipfs-deploy build"
 	},
 	"repository": {
-	  "type": "git",
-	  "url": "git+https://github.com/capofficial/ui.git"
+		"type": "git",
+		"url": "git+https://github.com/capofficial/ui.git"
 	},
 	"author": "",
 	"license": "ISC",
 	"bugs": {
-	  "url": "https://github.com/capofficial/ui/issues"
+		"url": "https://github.com/capofficial/ui/issues"
 	},
 	"homepage": "https://github.com/capofficial/ui#readme",
 	"devDependencies": {
-	  "@rollup/plugin-alias": "^3.1.9",
-	  "@rollup/plugin-commonjs": "^22.0.2",
-	  "@rollup/plugin-node-resolve": "^14.1.0",
-	  "@rollup/plugin-replace": "^4.0.0",
-	  "chart.js": "^3.9.1",
-	  "ethers": "^5.7.1",
-	  "rollup": "^2.79.0",
-	  "rollup-plugin-copy": "^3.4.0",
-	  "rollup-plugin-css-only": "^3.1.0",
-	  "rollup-plugin-gzip": "^3.0.1",
-	  "rollup-plugin-livereload": "^2.0.5",
-	  "rollup-plugin-svelte": "^7.1.0",
-	  "rollup-plugin-terser": "^7.0.2",
-	  "svelte": "^3.50.1",
-	  "svelte-drag": "^3.1.0",
-	  "tippy.js": "^6.3.7"
+		"@rollup/plugin-alias": "^3.1.9",
+		"@rollup/plugin-commonjs": "^22.0.2",
+		"@rollup/plugin-node-resolve": "^14.1.0",
+		"@rollup/plugin-replace": "^4.0.0",
+		"chart.js": "^3.9.1",
+		"ethers": "^5.7.1",
+		"rollup": "^2.79.0",
+		"rollup-plugin-copy": "^3.4.0",
+		"rollup-plugin-css-only": "^3.1.0",
+		"rollup-plugin-gzip": "^3.0.1",
+		"rollup-plugin-livereload": "^2.0.5",
+		"rollup-plugin-svelte": "^7.1.0",
+		"rollup-plugin-terser": "^7.0.2",
+		"svelte": "^3.50.1",
+		"svelte-drag": "^3.1.0",
+		"tippy.js": "^6.3.7"
 	},
 	"dependencies": {
-	  "alchemy-sdk": "^2.2.3",
-	  "lightweight-charts": "^3.8.0",
-	  "sirv-cli": "^2.0.2"
+		"alchemy-sdk": "^2.2.3",
+		"d3-scale": "^4.0.2",
+		"sirv-cli": "^2.0.2"
 	}
-  }
-  
+}

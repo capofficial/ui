@@ -1,5 +1,10 @@
 <script>
-	/* TODO
+  import { selectedMarketInfo } from "@lib/stores";
+  import { showModal } from "@lib/ui";
+  import { INFO_ICON_CIRCLE } from "@lib/icons";
+  import Chart from "../Chart/Chart.svelte";
+  import CreateNewOrder from "./CreateNewOrder.svelte";
+  /* TODO
 	- For a boilerplate, see Account.svelte
 	- Should have a header with the the selectedMarket and latest price (spaced between), as well as the funding rate
 		- Should have an info icon to display market info modal when clicked
@@ -17,4 +22,62 @@
 	*/
 </script>
 
-new order
+<div class="new-order">
+  <div class="header">
+    <div class="selected-market">
+      {$selectedMarketInfo.symbol}
+      <!-- svelte-ignore a11y-click-events-have-key-events -->
+      <div
+        class="info-icon"
+        on:click|stopPropagation={() =>
+          showModal("MarketInfo", $selectedMarketInfo)}
+      >
+        {@html INFO_ICON_CIRCLE}
+      </div>
+    </div>
+    <div class="price">{$selectedMarketInfo.price}</div>
+  </div>
+  <div class="chart">
+    <div id="chart">
+      <Chart />
+    </div>
+  </div>
+  <div>
+		<CreateNewOrder />
+  </div>
+</div>
+
+<style>
+  .header {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    border-bottom: 1px solid var(--layerDark);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 85%;
+    justify-content: space-between;
+  }
+  .selected-market {
+    font-size: 16px;
+    display: flex;
+  }
+  .price {
+    font-size: 14px;
+  }
+  .info-icon {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    margin-left: 10px;
+  }
+  .info-icon :global(svg) {
+    fill: var(--text200);
+    width: 18px;
+  }
+  .chart {
+    padding: 10px;
+    border-bottom: 1px solid var(--layerDark);
+  }
+</style>
