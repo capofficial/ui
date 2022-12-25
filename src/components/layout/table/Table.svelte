@@ -67,7 +67,7 @@
 
   .data-wrapper {
     height: calc(100% - 39px);
-    overflow-y: scroll;
+    overflow-y: auto;
     scrollbar-color: var(--layer200);
     scrollbar-width: thin;
   }

@@ -77,7 +77,6 @@
     width: 18px;
   }
   .chart {
-    padding: 10px;
     border-bottom: 1px solid var(--layerDark);
   }
 </style>

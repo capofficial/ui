@@ -1,68 +1,88 @@
 <script>
   import { getChainlinkPriceHistory } from "@api/markets";
   import { onMount } from "svelte";
-  import { scaleLinear } from "d3-scale";
+  import { formatUnits } from '@lib/formatters';
+  import { getLatestBlock } from '@lib/utils';
 
-  const leftOffset = 0;
-  const bottomOffset = 0;
-	let length;
-  let pointsY = [];
-	let height = 0, width = 0;
-	let minY
-	let maxY
-  let activeIndex = null; // hovered timestamp
-
+  import { createChart } from 'lightweight-charts';
+ 
 	onMount(async () => {
-		const dimensions = document.getElementById("chart").getBoundingClientRect();
-		height = dimensions.height
-		width = dimensions.width
-    let points = [];
+    
+    const chart = createChart(document.getElementById('lightweight-graph'),
+    {
+      layout: {
+            background: { color: '#1b1f22' },
+            textColor: '#DDD',
+        },
+        grid: {
+            vertLines: { color: '#444444' },
+            horzLines: { color: '#444444' },
+        },
+    }
+    )
+
+    const areaSeries = chart.addAreaSeries()
+
+    chart.priceScale().applyOptions({
+    borderColor: '#444444',
+    });
+
+    chart.timeScale().applyOptions({
+      borderColor: '#444444',
+      timeVisible: true,
+      secondsVisible: false,
+      fixLeftEdge: true,
+      fixRightEdge: true,
+    });
+
     try {
+
       let priceHistory = await getChainlinkPriceHistory(
         // "0x3607e46698d218b3a5cae44bf381475c0a5e2ca7"
 				"0x942d00008d658dbb40745bbec89a93c253f9b882"
       );
+      
       priceHistory = priceHistory.priceHistory.nodes;
-			priceHistory.reverse()
-			length = priceHistory.length;
-      pointsY = priceHistory.map((i) => Math.ceil(Number(i.latestAnswer) / 10 ** 6) / 10 ** 2);
-      maxY = Math.max(...pointsY);
-      minY = Math.min(...pointsY);
-      loading = false;
+      priceHistory.reverse()
+
+      let latestBlock = await getLatestBlock()
+
+      let latestBlockNumber = latestBlock.number
+      let currentTimestamp = Math.floor((Date.now() / 1000));
+
+      let averageBlockTime = 0.5; //2 blocks/s on arbitrum at the moment
+
+      for (let i = 0; i < priceHistory.length; i++)
+      {
+        let historyBlockNumber = Number(priceHistory[i].blockNumber)
+        
+        let blockDiff = latestBlockNumber - historyBlockNumber
+
+        let timeDiff = Math.floor(blockDiff * averageBlockTime)
+
+        let estimatedHistoryTimestamp = currentTimestamp - timeDiff
+
+        let dataPoint = {
+          time: estimatedHistoryTimestamp,
+          value: Number(formatUnits(priceHistory[i].latestAnswer, 8))
+        }
+
+        areaSeries.update(dataPoint)
+
+        chart.timeScale().fitContent();
+
+      }
+
     } catch (err) {
       console.log(err);
     }
   });
 
-  const onMouseMove = (e) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    activeIndex = Math.floor(+xScale.invert(x))
-    if (activeIndex >= length) activeIndex = null;
-    if (activeIndex < 0) activeIndex = null;
-  }
 
-  let loading = true;
-  $: xScale = scaleLinear().domain([1, length + 1]).range([leftOffset, width]);
-  $: yScale = scaleLinear()
-    .domain([minY, maxY])
-    .range([height - bottomOffset - 20, 0]);
-	$: linePath = `M${pointsY
-    .map((p, i) => `${xScale(i).toFixed(2)},${yScale(p).toFixed(2)}`)
-    .join('L')}`;
-	$: areaPath = `${linePath}L${xScale(length)},${yScale(minY)}L${xScale(0)},${yScale(minY)}Z`;
 
-  $: toolTipCoords = () => {
-    let x = xScale(activeIndex)
-    let y = yScale(pointsY[activeIndex]) - 30
-    if (x < leftOffset + 50) x = 50
-    if (x > width - 60) x = width - 60
-    if (y < 0) y = 20
-    return [x, y]
-  }
 </script>
 
-<svg on:mousemove={onMouseMove} on:mouseleave={() => activeIndex = null}>
+<!--<svg on:mousemove={onMouseMove} on:mouseleave={() => activeIndex = null}>
   <g>
 		<path class="path-line-longs" d={linePath} />
 		<path class="path-area-longs" d={areaPath} fill="url(#chart-line)"/>
@@ -76,36 +96,15 @@
 		<stop offset="50%" stop-color="var(--primary)" />
 		<stop offset="90%" stop-color="var(--layer50)" />
 	</linearGradient>
-</svg>
-<style>
-	svg {
-		height: 100%;
-		width: 100%;
-		min-height: 150px; 
-	}
-  .path-line-longs {
-    fill: none;
-    stroke: var(--primary);
-    stroke-linejoin: round;
-    stroke-linecap: round;
-    stroke-width: 1;
-	}
-  .path-area-longs {
-    fill: url(#chart-line);
-    opacity: 0.1;
-  }
-  .active-circle {
-    fill: var(--primary);
-  }
-  rect {
-    width: 100px;
-    height: 20px;
-    fill: white;
-    opacity: 1
-  }
-  text {
-    fill: var(--layer25);
-  }
+</svg> -->
 
+<div class='chart' id='lightweight-graph'></div>
+
+<style>
+  .chart {
+    margin-right: -1px;
+    margin-bottom: -1px;
+		min-height: 176px; 
+  }
 
 </style>

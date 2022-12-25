@@ -3,6 +3,8 @@ import { get } from 'svelte/store'
 import { CHAINDATA } from './config'
 import { chainId } from './stores'
 
+import { ethers } from 'ethers'
+
 export function hashString(_string) {
   var hash = 0,
     i, chr;
@@ -50,4 +52,17 @@ export function getChainData(key) {
 	const _chainId = get(chainId);
 	if (!_chainId || !CHAINDATA[_chainId]) return;
 	return CHAINDATA[_chainId][key];
+}
+
+export async function getBlockTimestamp(block) {
+	if (!block) return;
+	let _provider = new ethers.providers.JsonRpcProvider(CHAINDATA[42161].rpc);
+	let timestamp = (await _provider.getBlock(Number(block.blockNumber))).timestamp;
+	return timestamp;
+}
+
+export async function getLatestBlock() {
+	let _provider = new ethers.providers.JsonRpcProvider(CHAINDATA[42161].rpc);
+	let latestBlock = await _provider.getBlock("latest");
+	return latestBlock;
 }

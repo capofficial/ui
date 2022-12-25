@@ -3,6 +3,7 @@ import { ethers } from 'ethers'
 import { ADDRESS_ZERO, BPS_DIVIDER } from './config'
 import { locale } from './stores'
 import { getChainData } from './utils'
+import { DEFAULT_CHAIN_ID, CHAINDATA } from './config'
 
 export function formatUnits(amount, decimals) {
 	if (!amount) return 0;
