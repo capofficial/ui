@@ -54,11 +54,11 @@ export function getChainData(key) {
 	return CHAINDATA[_chainId][key];
 }
 
-export async function getBlockTimestamp(block) {
-	if (!block) return;
+export async function getBlock(blockNumber) {
+	if (!blockNumber) return;
 	let _provider = new ethers.providers.JsonRpcProvider(CHAINDATA[42161].rpc);
-	let timestamp = (await _provider.getBlock(Number(block.blockNumber))).timestamp;
-	return timestamp;
+	let block = await _provider.getBlock(blockNumber);
+	return block;
 }
 
 export async function getLatestBlock() {

@@ -15,8 +15,8 @@
             textColor: '#DDD',
         },
         grid: {
-            vertLines: { color: '#444444' },
-            horzLines: { color: '#444444' },
+            vertLines: { color: '#16191c' },
+            horzLines: { color: '#16191c' },
         },
     }
     )
@@ -29,10 +29,11 @@
 
     chart.timeScale().applyOptions({
       borderColor: '#444444',
-      timeVisible: true,
+      timeVisible: false,
       secondsVisible: false,
       fixLeftEdge: true,
       fixRightEdge: true,
+      visible: false,
     });
 
     try {
@@ -48,9 +49,9 @@
       let latestBlock = await getLatestBlock()
 
       let latestBlockNumber = latestBlock.number
-      let currentTimestamp = Math.floor((Date.now() / 1000));
+      let latestBlockTimestamp = latestBlock.timestamp
 
-      let averageBlockTime = 0.5; //2 blocks/s on arbitrum at the moment
+      let averageBlockTime = 0.4; //2 blocks/s on arbitrum at the moment
 
       for (let i = 0; i < priceHistory.length; i++)
       {
@@ -60,7 +61,7 @@
 
         let timeDiff = Math.floor(blockDiff * averageBlockTime)
 
-        let estimatedHistoryTimestamp = currentTimestamp - timeDiff
+        let estimatedHistoryTimestamp = latestBlockTimestamp - timeDiff
 
         let dataPoint = {
           time: estimatedHistoryTimestamp,

@@ -9,7 +9,7 @@
 	*/
 
   import { formatUnits, formatDate, formatSide, formatForDisplay, formatOrderType, formatMarketName } from '@lib/formatters'
-  import { XMARK_ICON, PENCIL_ICON } from '@lib/icons'
+  import { XMARK_ICON, PENCIL_ICON, LOADING_ICON } from '@lib/icons'
   import { DEFAULT_ORDERS_SORT_KEY } from '@lib/config'
 
   import Table from '@components/layout/table/Table.svelte'
@@ -19,7 +19,7 @@
   export let allColumns;
 
   import { address, orders } from '@lib/stores'
-  import { getUserOrders } from '@api/orders'
+  import { getUserOrders, cancelOrder } from '@api/orders'
 
   let isLoading = true, t;
 
@@ -31,6 +31,13 @@
   }
 
   $: fetchData($address);
+
+  let ordersCancelling = {};
+	async function _cancelOrder(orderId) {
+		ordersCancelling[orderId] = true;
+		const success = await cancelOrder(orderId);
+		ordersCancelling[orderId] = false;
+	}
 
   let sortKey = "timestamp"
 
@@ -54,7 +61,7 @@
       <Cell>{formatUnits(order.margin, 6)}</Cell>
       <Cell>{formatOrderType(order.orderType)}</Cell>
       <Cell isTools={true}>
-				<a >{@html XMARK_ICON}</a>
+				<a on:click|stopPropagation={() => { _cancelOrder(order.orderId) }}>{#if ordersCancelling[order.orderId]}{@html XMARK_ICON}{:else}{@html XMARK_ICON}{/if}</a>
 			</Cell>
     </Row>
 		{/each}
