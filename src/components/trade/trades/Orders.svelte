@@ -54,7 +54,7 @@
 		{#each $orders as order}
 		<Row>
       <Cell>{formatDate(order.timestamp)}</Cell>
-      <Cell hasClass={order.isLong ? 'green' : 'red'}>{formatSide(order.isLong)}</Cell>
+      <Cell hasClass={order.isLong ? 'green' : 'red'}>{formatSide(order.isLong, order.isReduceOnly)}</Cell>
       <Cell><a href={`/trade/${order.market}`}>{formatMarketName(order.market)}</a></Cell>
       <Cell>{formatUnits(order.price, 18)}</Cell>
       <Cell>{formatUnits(order.size, 6)}</Cell>

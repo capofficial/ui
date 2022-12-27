@@ -47,7 +47,8 @@ let allColumns = {
 		],
 	}
 
-let panel = 'orders'
+let panel = 'positions'
+
 
 </script>
 

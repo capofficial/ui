@@ -39,8 +39,8 @@
     try {
 
       let priceHistory = await getChainlinkPriceHistory(
-        // "0x3607e46698d218b3a5cae44bf381475c0a5e2ca7"
-				"0x942d00008d658dbb40745bbec89a93c253f9b882"
+        "0x3607e46698d218b3a5cae44bf381475c0a5e2ca7"
+				//"0x942d00008d658dbb40745bbec89a93c253f9b882"
       );
       
       priceHistory = priceHistory.priceHistory.nodes;

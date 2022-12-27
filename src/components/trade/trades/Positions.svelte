@@ -9,15 +9,18 @@
 		- The UPLs are pulled directly from the contract (in @api/positions: getUserPositionsWithUpls). No need to calculate them client side.
 	*/
 
+	import { get } from 'svelte/store'
     import { address, positions } from '@lib/stores'
     import { getUserPositionsWithUpls } from '@api/positions'
     import { formatUnits, formatDate, formatSide, formatForDisplay, formatMarketName } from '@lib/formatters'
     import { XMARK_ICON, PENCIL_ICON } from '@lib/icons'
     import { DEFAULT_POSITIONS_SORT_KEY } from '@lib/config'
 
+	import { showModal } from '@lib/ui'
+
     import Table from '@components/layout/table/Table.svelte'
-	  import Row from '@components/layout/table/Row.svelte'
-	  import Cell from '@components/layout/table/Cell.svelte'
+	import Row from '@components/layout/table/Row.svelte'
+	import Cell from '@components/layout/table/Cell.svelte'
 
     export let allColumns;
 
@@ -26,11 +29,11 @@
   async function fetchData() {
 		clearTimeout(t1);
 		const done = await getUserPositionsWithUpls();
- 		if (done) isLoading = false;
+		if (done) isLoading = false;
 		t1 = setTimeout(fetchData, 5000);
 	}
 
-	$: fetchData($address);
+  $: fetchData($address);
 
   let sortKey = "timestamp"
 
@@ -57,8 +60,8 @@
       <Cell>{formatUnits(position.upl, 6)}</Cell>
       <!--<Cell>{formatForDisplay(position.fundingTracker)}</Cell>-->
       <Cell isTools={true}>
-				<a >{@html PENCIL_ICON}</a>
-				<a >{@html XMARK_ICON}</a>
+				<!--<a >{@html PENCIL_ICON}</a>-->
+				<a on:click|stopPropagation={() => { showModal('ClosePosition', position) }}>{@html XMARK_ICON}</a>
 			</Cell>
     </Row>
 		{/each}

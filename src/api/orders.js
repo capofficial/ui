@@ -117,3 +117,52 @@ export async function cancelAllOrders() {
 		showError(e);
 	}
 }
+
+export async function closePosition(params) {
+
+	const contract = getContract({name: 'Trade', hasSigner: true});
+
+	/*
+	- closing a position submits a reduce only order in the opposite direction, similar to the current private beta
+	- it should allow closing at a price, e.g. TP (limit order) or SL (stop order)
+	*/
+
+	console.log("ORDER PARAMS", params)
+
+	let market = params.market
+	let margin = 0;
+	let size = params.size;
+	let price = (params.orderType != 0) ? parseUnits(params.price, 18) : 0;
+	let orderType = params.orderType;
+	let isReduceOnly = true;
+	let isLong = !params.isLong;
+
+	let tpPrice = 0  //parseUnits(params.tpPrice, 18);
+	let slPrice = 0  //parseUnits(params.slPrice, 18);
+
+	try {
+
+		const orderTuple = createOrderTuple({
+			market,
+			isLong,
+			margin,
+			size,
+			price,
+			orderType,
+			isReduceOnly
+		});
+
+		let tx = await contract.submitOrder(orderTuple, tpPrice, slPrice);
+
+		let receipt = await tx.wait();
+
+		if (receipt && receipt.status == 1) {
+			showToast('Reduce Order submitted.');
+			getUserOrders();
+		}
+
+	} catch(e) {
+		showError(e);
+	}
+
+}
