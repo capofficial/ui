@@ -66,3 +66,17 @@ export async function getLatestBlock() {
 	let latestBlock = await _provider.getBlock("latest");
 	return latestBlock;
 }
+
+export function getUPL(position, latestPrice) {
+	let upl = 0;
+	if (position.price * 1 == 0) return undefined;
+
+	if (latestPrice) {
+		if (position.isLong) {
+			upl = position.size * (latestPrice * 1 - position.price * 1) / position.price;
+		} else {
+			upl = position.size * (position.price * 1 - latestPrice * 1) / position.price;
+		}
+	}
+	return upl;
+}

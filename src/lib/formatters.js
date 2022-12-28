@@ -1,7 +1,7 @@
 import { get } from 'svelte/store'
 import { ethers } from 'ethers'
 import { ADDRESS_ZERO, BPS_DIVIDER } from './config'
-import { locale } from './stores'
+import { locale, upl } from './stores'
 import { getChainData } from './utils'
 import { DEFAULT_CHAIN_ID, CHAINDATA } from './config'
 
@@ -207,6 +207,24 @@ export function formatPosition(position) {
 	position.price = formatUnits(position.price);
 	position.leverage = Math.ceil(position.size * 1000 / position.margin)/1000;
 	return position;
+}
+
+export function formatPositionNew(position) {
+	if (!position) return;
+
+	position = {
+		user: position.user,
+		market: position.market,
+		price: formatUnits(position.price, 18),
+		size: formatUnits(position.size, 6),
+		margin: formatUnits(position.margin, 6),
+		upl: formatUnits(position.upl, 6),
+		isLong: position.isLong,
+		fundingTracker: formatUnits(position.fundingTracker, 6),
+		timestamp: position.timestamp,
+	}
+
+	return position
 }
 
 export function formatHistoryItem(item) {

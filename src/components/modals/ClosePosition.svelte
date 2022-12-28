@@ -12,12 +12,13 @@
 	import Button from '@components/layout/Button.svelte'
 	import LabelValue from '@components/layout/LabelValue.svelte'
 
-	import { formatPnl, formatUnits, formatForDisplay } from '@lib/formatters'
+	import { formatPnl, formatUnits, formatForDisplay, formatPositionNew } from '@lib/formatters'
 	import { focusInput, hideModal } from '@lib/ui'
 	import { BPS_DIVIDER } from '@lib/config'
 
 	import { markets } from '@lib/stores'
 	import { get } from 'svelte/store'
+	import { getUPL } from '@lib/utils'
 
 	import { closePosition } from '@api/orders'
 
@@ -26,12 +27,17 @@
 	let amount, isSubmitting, sizeToClosePercent = 0;
 	let _tpPrice = 0
 	let _slPrice = 0
+	let tpGainPercent = 0
+	let slLossPercent = 0
 	let invalidTP = true
 	let invalidSL = true
+	let percentageInput = false
 
 	let _markets = get(markets)
 	let stopType = 'market'
 
+
+	let _position = formatPositionNew(data)
 /*	async function submit() {
 		if (!amount) return focusInput('Size to Close');
 		isSubmitting = true;
@@ -48,9 +54,8 @@
 
 	function setSizeToClosePercent(_amount) {
 		if (!data.size) return;
-		sizeToClosePercent = 100 * _amount / formatUnits(data.size, 6);
+		sizeToClosePercent = 100 * _amount / _position.size;
 		if (sizeToClosePercent > 100) sizeToClosePercent = 100;
-		console.log("data", data)
 	}
 
 	$: setSizeToClosePercent(amount);
@@ -61,28 +66,53 @@
 			estimatedPnl = 0;
 			return;
 		}
-		estimatedPnl = formatUnits(data.upl, 6) * (sizeToClosePercent / 100)
+
+		if (stopType === 'market')
+		{
+			estimatedPnl = _position.upl * (sizeToClosePercent / 100)
+		}
+		else if (stopType === 'takeProfit')
+		{
+
+			let tpPosition = {
+				isLong: _position.isLong,
+				size: amount,
+				price: _position.price,
+			}
+
+			let _upl = getUPL(tpPosition, _tpPrice)
+			estimatedPnl = _upl
+		}
+		else if (stopType === 'stopLoss')
+		{
+			let slPosition = {
+				isLong: data.isLong,
+				size: amount,
+				price: _position.price
+			}
+
+			let _upl = getUPL(slPosition, _slPrice)
+			estimatedPnl = _upl
+		}
 	} 
 
-	$: calculatePnl(amount);
+	$: calculatePnl(amount, _tpPrice, _slPrice, stopType);
 
 	let feePercent = 0
 	let totalFee = 0
 	function calculateFee() {
-		console.log("calculating fees", _markets)
-		feePercent = _markets[data.market].fee / BPS_DIVIDER
-		console.log("calculating total fee", data.margin, sizeToClosePercent, feePercent)
-		totalFee = ((formatUnits(data.margin, 6)) * (sizeToClosePercent / 100)) * feePercent  
+		feePercent = _markets[_position.market].fee / BPS_DIVIDER
+		totalFee = (_position.margin * (sizeToClosePercent / 100)) * feePercent  
 	}
 
-	$: calculateFee(amount);
+	$: calculateFee(amount, stopType);
 
 	let remainingMargin = 0;
 	function calculateRemainingMargin() {
-		remainingMargin = (formatUnits(data.margin, 6)) - ((formatUnits(data.margin, 6)) * (sizeToClosePercent / 100)) - totalFee
+		remainingMargin = _position.margin - (_position.margin * (sizeToClosePercent / 100))
 	}
 
-	$: calculateRemainingMargin(amount);
+	$: calculateRemainingMargin(amount, stopType);
 
 	async function submitClosePosition() {
 		isSubmitting = true;
@@ -107,9 +137,9 @@
 		}
 
 		let params = {
-			market: data.market,
+			market: _position.market,
 			size: amount * 10**6,
-			isLong: data.isLong,
+			isLong: _position.isLong,
 			orderType: _orderType,
 			price: _price
 		}
@@ -119,9 +149,9 @@
 	}
 
 	function validateTPSL() {
-		let currentPrice = _markets[data.market].price
+		let currentPrice = _markets[_position.market].price
 		
-		if (data.isLong)
+		if (_position.isLong)
 		{
 			if (_tpPrice <= currentPrice)
 			{
@@ -163,7 +193,68 @@
 		}
 	}
 
-	$: validateTPSL(_tpPrice, _slPrice)
+	$: validateTPSL(_tpPrice, _slPrice, stopType)
+
+	function calculateTPSLPercentage() {
+
+		if (percentageInput == false)
+		{
+			if (stopType === 'stopLoss')
+			{
+				slLossPercent = ((estimatedPnl / _position.margin) * 100).toFixed(2) * -1
+			}
+			else if (stopType === 'takeProfit')
+			{
+				tpGainPercent = ((estimatedPnl / _position.margin) * 100).toFixed(2)
+			}
+		}
+	}
+
+	$: calculateTPSLPercentage(_tpPrice, _slPrice, amount)
+
+	function getTPSLFromGainLoss() {
+
+		if (percentageInput)
+		{
+			let estimatedTakeProfit
+			let estimatedStopLoss
+
+			if (_position.isLong)
+			{
+				if (stopType === 'takeProfit')
+				{
+					estimatedTakeProfit = Number(_position.price) + ( Number(_position.price) * ((tpGainPercent / 100) / (amount / _position.margin)))
+					_tpPrice = formatForDisplay(estimatedTakeProfit)
+				}
+				else if (stopType === 'stopLoss')
+				{
+					estimatedStopLoss = Number(_position.price) - ( Number(_position.price) * ((slLossPercent / 100) / (amount / _position.margin)))
+					_slPrice = formatForDisplay(estimatedStopLoss)
+				}
+			}
+			else
+			{
+				if (stopType === 'takeProfit')
+				{
+					estimatedTakeProfit = Number(_position.price) - ( Number(_position.price) * ((tpGainPercent / 100) / (amount / _position.margin)))
+					_tpPrice = formatForDisplay(estimatedTakeProfit)
+				}
+				else if (stopType === 'stopLoss')
+				{
+					estimatedStopLoss = Number(_position.price) + ( Number(_position.price) * ((slLossPercent / 100) / (amount / _position.margin)))
+					_slPrice = formatForDisplay(estimatedStopLoss)
+				}
+			}
+
+			calculatePnl(amount)
+			validateTPSL()
+		}
+	}
+
+	$: getTPSLFromGainLoss(tpGainPercent, slLossPercent, amount)
+
+	function onFocus() { percentageInput = true; }
+	function onBlur() { percentageInput = false; }
 
 	onMount(() => {
 		focusInput('Size to Close');
@@ -224,10 +315,93 @@
 		background-color: var(--layer400);
 	}
 
+	.group-tpsl {
+		display: flex;
+		flex-direction: row;
+		gap: 8px;
+	}
+
+	.tpsl-percentage {
+		width: 250px;
+		position: relative;
+		font-size: 85%;
+	}
+
+	input {
+		height: 100%;
+		width: 100%;
+		box-sizing: border-box;
+		text-align: right;
+		padding-right: 28px;
+		border-radius: 6px;
+		background-color: var(--layer50);
+		border: 1px solid var(--layer200);
+		caret-color: var(--primary);
+		font-size: inherit;
+		font-weight: 600;
+		/*transition: padding 200ms ease-in-out;*/
+	}
+	input:hover {
+		border-color: var(--layer300);
+	}
+	input:focus {
+		border-color: var(--primary);
+	}
+	input:disabled {
+		color: var(--text200);
+	}	
+
+	input::placeholder {
+	  color: var(--text500);
+	  opacity: 1;
+	}
+	input::-ms-input-placeholder{
+	  color: var(--text500);
+	}
+	input:-ms-input-placeholder {
+	  color: var(--text500);
+	}
+
+    .prefix {
+		position: absolute;
+		background-color: var(--layer50);
+		padding-left: 14px;
+		padding-right: 14px;
+		margin-left: 1px;
+		top: 50%;
+		transform: translateY(-50%);
+		pointer-events: none;
+		white-space: nowrap;
+		left: 0px;
+		display: flex;
+		align-items: center;
+		text-transform: uppercase;
+		letter-spacing: 0.05rem;
+		font-weight: 500;
+	}
+
+    .suffix {
+		position: absolute;
+		background-color: var(--layer50);
+		padding-left: 2px;
+		padding-right: 14px;
+		margin-right: 1px;
+		top: 50%;
+		transform: translateY(-50%);
+		pointer-events: none;
+		white-space: nowrap;
+		right: 0px;
+		display: flex;
+		align-items: center;
+		text-transform: uppercase;
+		letter-spacing: 0.05rem;
+		font-weight: 500;
+	}
+
 
 </style>
 
-<Modal title='Close Position' width={340}>
+<Modal title='Close Position' width={380}>
 	
 	<div class='container'>
 
@@ -238,11 +412,11 @@
 			</div>
 
 			<div class='row'>
-				<LabelValue label='Max' value={`${formatUnits(data.size, 6)}`} on:click={() => amount = formatUnits(data.size, 6)} isClickable={true} />
+				<LabelValue label='Max' value={`${_position.size}`} on:click={() => amount = _position.size} isClickable={true} />
 			</div>
 
 			<div class='row'>
-				<LabelValue label='P/L (approx)' value={estimatedPnl}/>
+				<LabelValue label='P/L (approx)' value={formatForDisplay(estimatedPnl)}/>
 			</div>
 
 			<div class='row'>
@@ -251,7 +425,7 @@
 
 			
 			<div class='row'>
-				<LabelValue label='Remaining Margin' value={remainingMargin}/>
+				<LabelValue label='Remaining Margin' value={formatForDisplay(remainingMargin)}/>
 			</div>
 
 			<div class='row bottom-spacing'>
@@ -266,7 +440,18 @@
 
 			{#if stopType == 'takeProfit'}
 			<div class='group'>
-				<Input label='Take Profit' bind:value={_tpPrice} />
+				<div class='group-tpsl'>
+					<Input label='Take Profit' bind:value={_tpPrice} />
+					<div class='tpsl-percentage'>
+						<label for='Gain' class='prefix'>
+							Gain
+						</label>
+						<input id='Gain'  type='number' step="0.0000001" bind:value={tpGainPercent} min="0" max="10000000" maxlength="10" spellcheck="false" placeholder={`0.0`} autocomplete="off" autocorrect="off" inputmode="decimal" lang="en" on:focus={onFocus} on:blur={onBlur} >
+						<label for='Gain' class='suffix'>
+							%
+						</label>
+					</div>
+				</div>
 				{#if invalidTP && data.isLong}
 					<div class='warning'>Take-Profit level must be <strong>higher</strong> than the current price.</div>
 				{:else if invalidTP && !data.isLong}
@@ -277,7 +462,18 @@
 
 			{#if stopType == 'stopLoss'}
 			<div class='group'>
-				<Input label='Stop Loss' bind:value={_slPrice} />
+				<div class='group-tpsl'>
+					<Input label='Stop Loss' bind:value={_slPrice} />
+					<div class='tpsl-percentage'>
+						<label for='Loss' class='prefix'>
+							Loss
+						</label>
+						<input id='Loss'  type='number' step="0.0000001" bind:value={slLossPercent} min="0" max="10000000" maxlength="10" spellcheck="false" placeholder={`0.0`} autocomplete="off" autocorrect="off" inputmode="decimal" lang="en" on:focus={onFocus} on:blur={onBlur} >
+						<label for='Loss' class='suffix'>
+							%
+						</label>
+					</div>
+				</div>
 				{#if invalidSL && data.isLong}
 					<div class='warning'>Stop-Loss level must be <strong>lower</strong> than the current price.</div>
 				{:else if invalidSL && !data.isLong}
