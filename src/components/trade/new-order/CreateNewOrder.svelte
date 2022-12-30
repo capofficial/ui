@@ -6,23 +6,77 @@
   import Input from "../../layout/Input.svelte";
   import Slider from "../../layout/Slider.svelte";
 	import { getUserBalance } from '@api/account'
-	import { balance, size, price, currencyName } from '@lib/stores'
+	import { selectedMarket, balance, size, price, currencyName, margin, freeMargin, maxSize, tpPrice, slPrice, hasTPSL, isReduceOnly, orderType, isLong } from '@lib/stores'
+  import { submitOrder } from '@api/orders'
   import {formatForDisplay} from '@lib/formatters'
 
-  let orderType;
+  let _orderType;
   let sizeHighlighted;
   console.log($balance)
   onMount(() => {
-    orderType = getUserSetting("orderType");
+    _orderType = getUserSetting("orderType");
     getUserBalance()
     price.set()
   });
-  let setOrderType = (_orderType) => {
-    orderType = _orderType;
+
+  function setOrderType(type) {
+    _orderType = type;
     saveUserSetting("orderType", _orderType);
+    if (_orderType === 'market')
+    {
+      orderType.set(0)
+    }
+    else if (_orderType === 'limit')
+    {
+      orderType.set(1)
+    }
+    else if (_orderType === 'stop')
+    {
+      orderType.set(2)
+    }
+    
   };
 
-  let tpslEnabled = false
+  function submitOrderType(type) {
+    if (type === 'short')
+    {
+      isLong.set(false)
+      submitOrder(
+        {
+          market: $selectedMarket,
+		      isLong: $isLong,
+		      margin: $margin,
+		      size: $size,
+		      price: $price,
+		      hasTPSL: $hasTPSL,
+		      isReduceOnly: $isReduceOnly,
+		      orderType: $orderType,
+		      tpPrice: $tpPrice,
+		      slPrice: $slPrice
+        }
+      )
+
+    }
+    else if (type === 'long')
+    {
+      isLong.set(true)
+      submitOrder(
+        {
+          market: $selectedMarket,
+		      isLong: $isLong,
+		      margin: $margin,
+		      size: $size,
+		      price: $price,
+		      hasTPSL: $hasTPSL,
+		      isReduceOnly: $isReduceOnly,
+		      orderType: $orderType,
+		      tpPrice: $tpPrice,
+		      slPrice: $slPrice
+        }
+      )
+    }
+
+  }
   
 </script>
 
@@ -31,56 +85,60 @@
     <div class="left">
       <div
         class={"item"}
-        class:selected={orderType == "market"}
+        class:selected={_orderType == "market"}
         on:click={() => setOrderType("market")}
       >
         Market
       </div>
       <div
         class={"item"}
-        class:selected={orderType == "limit"}
+        class:selected={_orderType == "limit"}
         on:click={() => setOrderType("limit")}
       >
         Limit
       </div>
       <div
         class={"item"}
-        class:selected={orderType == "stop"}
+        class:selected={_orderType == "stop"}
         on:click={() => setOrderType("stop")}
       >
         Stop
       </div>
     </div>
     <div class="right">
-      <Checkbox label="TP/SL" hasPadding bind:value={tpslEnabled} />
-      <Checkbox label="R-O" hasPadding />
+      <Checkbox label="TP/SL" hasPadding bind:value={$hasTPSL} />
+      <Checkbox label="R-O" hasPadding bind:value={$isReduceOnly}/>
     </div>
   </div>
   <div class='input-tpsl-container'>
     <div class='size-slider-limitprice-container'>
       <div class='input-container'>
-        <Input label={'Size'} bind:value={$size} onMaxButtonPress={() => (size.set($balance))}/>
+        <Input label={'Size'} bind:value={$size} onMaxButtonPress={() => (size.set($maxSize))}/>
       </div>
       <div class='slider-container'>
-          <Slider bind:value={$size} maxValue={$balance} bind:isActive={sizeHighlighted} isSecondaryColor={false} nullValue={true} />
+          <Slider bind:value={$size} maxValue={$maxSize} bind:isActive={sizeHighlighted} isSecondaryColor={false} nullValue={true} />
           <!-- <Slider bind:value={$size} maxValue={$maxSize} bind:isActive={sizeHighlighted} isSecondaryColor={!$isLong} nullValue={true} /> -->
       </div>
-      {#if orderType !== 'market'}
+      {#if _orderType !== 'market'}
         <div class='input-container'>
-          <Input label={'Limit Price'} bind:value={$price}/>
+          {#if _orderType === 'limit'}
+            <Input label={'Limit Price'} bind:value={$price}/>
+          {:else if _orderType === 'stop'}
+            <Input label={'Stop Price'} bind:value={$price}/>
+          {/if}
         </div>
       {/if}
     </div>
-    {#if tpslEnabled == true}
+    {#if $hasTPSL == true}
     <div class='tpsl-container-flex'>
       <div class='input-container-tpsl'>
-        <Input label={'TP'} bind:value={$size} />
+        <Input label={'TP'} bind:value={$tpPrice} />
         <div class='input-gain-loss'>
           <Input label={'Gain'} bind:value={$size} />
         </div>
       </div>
       <div class='input-container-tpsl'>
-        <Input label={'SL'} bind:value={$size} />
+        <Input label={'SL'} bind:value={$slPrice} />
         <div class='input-gain-loss'>
           <Input label={'Loss'} bind:value={$size} />
         </div>
@@ -89,13 +147,13 @@
     {/if}
   </div>
   <div class='buttons'>
-		<button class="secondary" on:click|stopPropagation={() => {console.log('Click Short')}}>Sell/Short</button>
-		<button class="primary" on:click|stopPropagation={() => {console.log('Click Long')}}>Buy/Long</button>
+		<button class="secondary" on:click|stopPropagation={() => submitOrderType('short')}>Sell/Short</button>
+		<button class="primary" on:click|stopPropagation={() => submitOrderType('long')}>Buy/Long</button>
 	</div>
   <div class='flex'>
     <div class='flex container'>
       <div class='flex'>Margin</div>
-      <div class='flex right'>{formatForDisplay($size)} {$currencyName}</div>
+      <div class='flex right'>{formatForDisplay($margin)} {$currencyName}</div>
     </div>
     <div class='flex container'>
       <div class='flex'>Fee (0.1%)</div>
