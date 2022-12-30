@@ -7,6 +7,8 @@
 	*/
 	import { markets } from '@lib/stores'
 	import { formatForDisplay, formatUnits } from '@lib/formatters'
+	import { selectedMarketInfo } from "@lib/stores"
+
 </script>
 
 <div class='markets'>
@@ -17,7 +19,7 @@
 	</div>
 	<div class='simpletable'>
 		{#each Object.values($markets) as market, i}
-		<a class='rows' href={`/trade/${market.symbol}`}>
+		<a class:active={market.symbol === $selectedMarketInfo.symbol} class='rows' href={`/trade/${market.symbol}`}>
 			<div class='name-leverage'>
 				<div>{market.symbol}</div>
 				<div class='leverage'>{market.maxLeverage}x</div>
@@ -73,6 +75,10 @@
 	flex-direction: row;
 	align-items: center;
 	justify-content: space-between;
+  }
+
+  a.active {
+	background-color: var(--layer300);
   }
   
   .rows:hover {

@@ -18,9 +18,9 @@ export const CHAINDATA = {
 		currencyAddress: '0x5FbDB2315678afecb367f032d93F642f64180aa3', // USDC address
 		currencyDecimals: 6, // USDC
 		contracts: {
-			Trade: '0x4A679253410272dd5232B3Ff7cF5dbB88f295319',
-			Pool: '0x7a2088a1bFc9d81c55368AE168C2C02570cB814F',
-			Store: '0xa85233C63b9Ee964Add6F2cffe00Fd84eb32338f',
+			Trade: '0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9',
+			Pool: '0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9',
+			Store: '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0',
 		},
 		alchemy: {
 			key: 'gDY8gANK8VJAg508BzJbdCpmZ4N43IZP',
@@ -50,3 +50,7 @@ export const CHAINDATA = {
 	}
 }
 export const CHAINLINK_URL = "https://atlas-postgraphile.public.main.prod.cldev.sh/graphql"
+export const CHAINLINK_CONTRACT_ADDRESSES = {
+	'BTC-USD': "0x942d00008d658dbb40745bbec89a93c253f9b882",
+	'ETH-USD': "0x3607e46698d218b3a5cae44bf381475c0a5e2ca7"
+}

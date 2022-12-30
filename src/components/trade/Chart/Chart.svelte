@@ -3,12 +3,21 @@
   import { onMount } from "svelte";
   import { formatUnits } from '@lib/formatters';
   import { getLatestBlock } from '@lib/utils';
+  import { selectedMarketInfo } from "@lib/stores"
+
+  import { CHAINLINK_CONTRACT_ADDRESSES } from '@lib/config'
 
   import { createChart } from 'lightweight-charts';
  
+  let chart
+  let areaSeries
+  let currentSymbol
+  let lastChartUpdateTimestamp = 0
+
 	onMount(async () => {
+
     
-    const chart = createChart(document.getElementById('lightweight-graph'),
+    chart = createChart(document.getElementById('lightweight-graph'),
     {
       layout: {
             background: { color: '#1b1f22' },
@@ -21,7 +30,7 @@
     }
     )
 
-    const areaSeries = chart.addAreaSeries()
+    areaSeries = chart.addAreaSeries()
 
     chart.priceScale().applyOptions({
     borderColor: '#444444',
@@ -36,13 +45,24 @@
       visible: false,
     });
 
+    getChartData()
+
+  });
+
+async function getChartData() {
+
+  let currentTime = Date.now() / 1000
+
+  if (currentSymbol !== $selectedMarketInfo.symbol || ((currentTime - lastChartUpdateTimestamp) > 180))
+  {
     try {
 
+      areaSeries.setData([])
+
       let priceHistory = await getChainlinkPriceHistory(
-        "0x3607e46698d218b3a5cae44bf381475c0a5e2ca7"
-				//"0x942d00008d658dbb40745bbec89a93c253f9b882"
+        CHAINLINK_CONTRACT_ADDRESSES[$selectedMarketInfo.symbol]
       );
-      
+
       priceHistory = priceHistory.priceHistory.nodes;
       priceHistory.reverse()
 
@@ -72,14 +92,18 @@
 
         chart.timeScale().fitContent();
 
-      }
+        currentSymbol = $selectedMarketInfo.symbol
+        lastChartUpdateTimestamp = Date.now() / 1000
+
+    }
 
     } catch (err) {
-      console.log(err);
+    console.log(err);
     }
-  });
+  }
+}
 
-
+$: getChartData($selectedMarketInfo.symbol)
 
 </script>
 

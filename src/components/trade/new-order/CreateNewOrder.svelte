@@ -21,6 +21,8 @@
     orderType = _orderType;
     saveUserSetting("orderType", _orderType);
   };
+
+  let tpslEnabled = false
   
 </script>
 
@@ -50,22 +52,42 @@
       </div>
     </div>
     <div class="right">
-      <Checkbox label="TP/SL" hasPadding />
+      <Checkbox label="TP/SL" hasPadding bind:value={tpslEnabled} />
       <Checkbox label="R-O" hasPadding />
     </div>
   </div>
-  <div class='input-container'>
-    <Input label={'Size'} bind:value={$size} onMaxButtonPress={() => (size.set($balance))}/>
-  </div>
-  <div class='slider-container'>
-      <Slider bind:value={$size} maxValue={$balance} bind:isActive={sizeHighlighted} isSecondaryColor={false} nullValue={true} />
-      <!-- <Slider bind:value={$size} maxValue={$maxSize} bind:isActive={sizeHighlighted} isSecondaryColor={!$isLong} nullValue={true} /> -->
-  </div>
-  {#if orderType !== 'market'}
-    <div class='input-container'>
-      <Input label={'Limit Price'} bind:value={$price}/>
+  <div class='input-tpsl-container'>
+    <div class='size-slider-limitprice-container'>
+      <div class='input-container'>
+        <Input label={'Size'} bind:value={$size} onMaxButtonPress={() => (size.set($balance))}/>
+      </div>
+      <div class='slider-container'>
+          <Slider bind:value={$size} maxValue={$balance} bind:isActive={sizeHighlighted} isSecondaryColor={false} nullValue={true} />
+          <!-- <Slider bind:value={$size} maxValue={$maxSize} bind:isActive={sizeHighlighted} isSecondaryColor={!$isLong} nullValue={true} /> -->
+      </div>
+      {#if orderType !== 'market'}
+        <div class='input-container'>
+          <Input label={'Limit Price'} bind:value={$price}/>
+        </div>
+      {/if}
     </div>
-  {/if}
+    {#if tpslEnabled == true}
+    <div class='tpsl-container-flex'>
+      <div class='input-container-tpsl'>
+        <Input label={'TP'} bind:value={$size} />
+        <div class='input-gain-loss'>
+          <Input label={'Gain'} bind:value={$size} />
+        </div>
+      </div>
+      <div class='input-container-tpsl'>
+        <Input label={'SL'} bind:value={$size} />
+        <div class='input-gain-loss'>
+          <Input label={'Loss'} bind:value={$size} />
+        </div>
+      </div>
+    </div>
+    {/if}
+  </div>
   <div class='buttons'>
 		<button class="secondary" on:click|stopPropagation={() => {console.log('Click Short')}}>Sell/Short</button>
 		<button class="primary" on:click|stopPropagation={() => {console.log('Click Long')}}>Buy/Long</button>
@@ -114,8 +136,30 @@
     margin: 10px;
     margin-top: 5px;
   }
+  .input-container-tpsl {
+    margin-right: 10px;
+    margin-left: 0px;
+    margin-top: 5px;
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+  }
+  .size-slider-limitprice-container {
+    flex-basis: 1fr;
+    flex-grow: 1;
+  }
+  .input-gain-loss {
+    width: 250px;
+  }
   .slider-container {
     margin: 15px;
+  }
+  .input-tpsl-container {
+    display: flex;
+    flex-direction: row;
+  }
+  .tpsl-container-flex {
+    width: 50%;
   }
 	.buttons {
 		display: flex;
