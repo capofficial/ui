@@ -56,9 +56,9 @@
       <Cell>{formatDate(order.timestamp)}</Cell>
       <Cell hasClass={order.isLong ? 'green' : 'red'}>{formatSide(order.isLong, order.isReduceOnly)}</Cell>
       <Cell><a href={`/trade/${order.market}`}>{formatMarketName(order.market)}</a></Cell>
-      <Cell>{formatUnits(order.price, 18)}</Cell>
-      <Cell>{formatUnits(order.size, 6)}</Cell>
-      <Cell>{formatUnits(order.margin, 6)}</Cell>
+      <Cell>{formatForDisplay(formatUnits(order.price, 18))}</Cell>
+      <Cell>{formatForDisplay(formatUnits(order.size, 6))}</Cell>
+      <Cell>{formatForDisplay(formatUnits(order.margin, 6))}</Cell>
       <Cell>{formatOrderType(order.orderType)}</Cell>
       <Cell isTools={true}>
 				<a on:click|stopPropagation={() => { _cancelOrder(order.orderId) }}>{#if ordersCancelling[order.orderId]}{@html XMARK_ICON}{:else}{@html XMARK_ICON}{/if}</a>
