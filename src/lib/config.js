@@ -18,9 +18,9 @@ export const CHAINDATA = {
 		currencyAddress: '0x5FbDB2315678afecb367f032d93F642f64180aa3', // USDC address
 		currencyDecimals: 6, // USDC
 		contracts: {
-			Trade: '0x742489F22807ebB4C36ca6cD95c3e1C044B7B6c8',
-			Pool: '0x1D8D70AD07C8E7E442AD78E4AC0A16f958Eba7F0',
-			Store: '0x666D0c3da3dBc946D5128D06115bb4eed4595580',
+			Trade: '0xf5059a5D33d5853360D16C683c16e67980206f36',
+			Pool: '0x95401dc811bb5740090279Ba06cfA8fcF6113778',
+			Store: '0x851356ae760d987E095750cCeb3bC6014560891C',
 		},
 		alchemy: {
 			key: 'gDY8gANK8VJAg508BzJbdCpmZ4N43IZP',
