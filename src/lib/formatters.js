@@ -166,6 +166,42 @@ export function formatMarket(market) {
 
 }
 
+export function formatHistory(history) {
+
+	if (!history) return;
+
+	let historyData
+	if (history.status == 'liquidated')
+	{
+		historyData = {
+			'Market': history.market,
+			'Side': `Liquidated ${formatSide(history.isLong)}`,
+			'Price': `${formatForDisplay(Number(formatUnits(history.price, 18)))}`,
+			'Size': `${formatForDisplay(Number(formatUnits(history.size), 6))}`,
+			'Margin': `${formatForDisplay(Number(formatUnits(history.margin), 6))}`,
+			'PnL': `${formatForDisplay(Number(formatUnits(history.pnl), 6))}`,
+			'Fee': `${formatForDisplay(Number(formatUnits(history.fee), 6))}`,
+			'Date': `${formatDate(history.timestamp)}`
+		}
+	}
+	else
+	{
+		historyData = {
+			'Market': history.market,
+			'Side': `${formatSide(history.isLong, history.isReduceOnly, history.pnl)}`,
+			'Price': `${formatForDisplay(Number(formatUnits(history.price, 18)))}`,
+			'Size': `${formatForDisplay(Number(formatUnits(history.size), 6))}`,
+			'Margin': `${formatForDisplay(Number(formatUnits(history.margin), 6))}`,
+			'PnL': `${formatForDisplay(Number(formatUnits(history.pnl), 6))}`,
+			'Fee': `${formatForDisplay(Number(formatUnits(history.fee), 6))}`,
+			'Date': `${formatDate(history.timestamp)}`
+		}
+	}
+
+	return historyData
+
+}
+
 export function formatGraphCandle(candle) {
 
 	if (!candle) return;

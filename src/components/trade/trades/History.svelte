@@ -12,7 +12,11 @@
   import Row from '@components/layout/table/Row.svelte'
   import Cell from '@components/layout/table/Cell.svelte'
 
-  import { formatMarketName, formatSide } from '@lib/formatters'
+  import { formatMarketName, formatSide, formatUnits, formatDate, formatForDisplay } from '@lib/formatters'
+  import { address } from '@lib/stores'
+  import { getUserHistory } from '@api/history'
+  import { showModal } from "@lib/ui";
+
 
   let columns = [
       {key: 'market', gridTemplate: '1.5fr', sortable: true},
@@ -21,38 +25,30 @@
       {key: 'pnl', gridTemplate: '1fr', sortable: true},
     ]
 
-  let history = [
+  let history = []
+
+async function getHistory() {
+  try {
+    let _history = await getUserHistory()
+    if (_history.length > 0)
     {
-      market: "ETH-USD",
-      isLong: true,
-      price: 1243.43,
-      pnl: 23,
-    },
-    {
-      market: "BTC-USD",
-      isLong: true,
-      price: 16789.43,
-      pnl: 2.89,
-    },
-    {
-      market: "EUR-USD",
-      isLong: false,
-      price: 1.01,
-      pnl: 513.89,
-    },
-    {
-      market: "SOL-USD",
-      isLong: true,
-      price: 15.43,
-      pnl: -574.89,
-    },
-    {
-      market: "AAVE-USD",
-      isLong: true,
-      price: 52.43,
-      pnl: 44.89,
-    },
-  ]
+      history = _history
+    }
+  } catch (err) {
+  console.log(err)
+  }
+}
+
+let isLoading = true, t1;
+
+async function fetchData() {
+  clearTimeout(t1);
+  const done = await getHistory();
+  if (done) isLoading = false;
+  t1 = setTimeout(fetchData, 10000);
+}
+
+$: fetchData($address);
 
 </script>
 
@@ -69,12 +65,32 @@
   >
     <div class='history-table'>
       {#each history as history}
-      <Row>
-        <Cell><a href={`/trade/${history.market}`}>{formatMarketName(history.market)}</a></Cell>
-        <Cell hasClass={history.isLong ? 'green' : 'red'}>{formatSide(history.isLong)}</Cell>
-        <Cell>{history.price}</Cell>
-        <Cell>{history.pnl}</Cell>
-      </Row>
+      <div class='row' on:click|stopPropagation={() => showModal("HistoryDetails", history)}>
+        <Row>
+          <Cell>{formatMarketName(history.market)}</Cell>
+          {#if history.status == 'liquidated'}
+            <Cell hasClass={history.isLong ? 'green' : 'red'}>{`Liquidated ${formatSide(history.isLong)}`}</Cell>
+          {:else if history.status == 'executed'}
+            {#if history.isReduceOnly}
+              <Cell hasClass={!history.isLong ? 'green' : 'red'}>{formatSide(history.isLong, history.isReduceOnly, history.pnl)}</Cell>
+            {:else}  
+              <Cell hasClass={history.isLong ? 'green' : 'red'}>{`Open ${formatSide(history.isLong)}`}</Cell>
+            {/if}
+          {:else if history.status == 'cancelled'}
+            <Cell hasClass={history.isLong ? 'green' : 'red'}>{`Cancel ${formatSide(history.isLong)}`}</Cell>
+          {/if}
+          <Cell>{formatForDisplay(formatUnits(history.price, 18))}</Cell>
+          {#if Number(formatUnits(history.pnl,6)) == 0}
+            {#if history.isReduceOnly}
+              <Cell>{formatForDisplay(formatUnits(history.pnl, 6))}</Cell>
+            {:else}
+              <Cell>-</Cell>
+            {/if}
+          {:else}
+            <Cell hasClass={history.pnl > 0 ? 'green' : 'red'}>{formatForDisplay(formatUnits(history.pnl, 6))}</Cell>
+          {/if}
+        </Row>
+      </div>
       {/each}
     </div>
   </Table>
@@ -106,6 +122,15 @@
   a {
     color: var(--primary);
     text-decoration: none;
+  }
+
+  .row {
+    user-select: none;
+  }
+
+  .row:hover {
+    background-color: var(--layer100);
+    cursor: pointer;
   }
 
 </style>

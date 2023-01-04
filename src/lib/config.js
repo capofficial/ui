@@ -18,9 +18,9 @@ export const CHAINDATA = {
 		currencyAddress: '0x5FbDB2315678afecb367f032d93F642f64180aa3', // USDC address
 		currencyDecimals: 6, // USDC
 		contracts: {
-			Trade: '0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9',
-			Pool: '0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9',
-			Store: '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0',
+			Trade: '0x742489F22807ebB4C36ca6cD95c3e1C044B7B6c8',
+			Pool: '0x1D8D70AD07C8E7E442AD78E4AC0A16f958Eba7F0',
+			Store: '0x666D0c3da3dBc946D5128D06115bb4eed4595580',
 		},
 		alchemy: {
 			key: 'gDY8gANK8VJAg508BzJbdCpmZ4N43IZP',
@@ -37,9 +37,9 @@ export const CHAINDATA = {
 		currencyAddress: '', // USDC address
 		currencyDecimals: 6, // USDC
 		contracts: {
-			Trade: '0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9',
-			Pool: '0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9',
-			Store: '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0',
+			Trade: '0x22a9B82A6c3D2BFB68F324B2e8367f346Dd6f32a',
+			Pool: '0x547382C0D1b23f707918D3c83A77317B71Aa8470',
+			Store: '0x1343248Cbd4e291C6979e70a138f4c774e902561',
 		},
 		alchemy: {
 			key: 'gDY8gANK8VJAg508BzJbdCpmZ4N43IZP',
@@ -54,3 +54,5 @@ export const CHAINLINK_CONTRACT_ADDRESSES = {
 	'BTC-USD': "0x942d00008d658dbb40745bbec89a93c253f9b882",
 	'ETH-USD': "0x3607e46698d218b3a5cae44bf381475c0a5e2ca7"
 }
+
+export const HISTORY_URL = "http://localhost:8000/subgraphs/name/cap-subgraph"

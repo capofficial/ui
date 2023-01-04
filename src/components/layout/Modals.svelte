@@ -6,6 +6,7 @@
 	import Deposit from '../modals/Deposit.svelte'
 	import Withdraw from '../modals/Withdraw.svelte'
 	import MarketInfo from '../modals/MarketInfo.svelte'
+	import HistoryDetails from '../modals/HistoryDetails.svelte'
 
 </script>
 
@@ -27,4 +28,8 @@
 
 {#if $activeModal && $activeModal.name == 'MarketInfo'}
 <MarketInfo data={$activeModal.data} />
+{/if}
+
+{#if $activeModal && $activeModal.name == 'HistoryDetails'}
+<HistoryDetails data={$activeModal.data} />
 {/if}
