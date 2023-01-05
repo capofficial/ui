@@ -7,6 +7,7 @@
 	import Withdraw from '../modals/Withdraw.svelte'
 	import MarketInfo from '../modals/MarketInfo.svelte'
 	import HistoryDetails from '../modals/HistoryDetails.svelte'
+	import ChainSelect from '../modals/ChainSelect.svelte'
 
 </script>
 
@@ -32,4 +33,8 @@
 
 {#if $activeModal && $activeModal.name == 'HistoryDetails'}
 <HistoryDetails data={$activeModal.data} />
+{/if}
+
+{#if $activeModal && $activeModal.name == 'ChainSelect'}
+<ChainSelect />
 {/if}

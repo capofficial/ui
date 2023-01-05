@@ -1,11 +1,12 @@
 import { ethers } from 'ethers'
+import { get } from 'svelte/store'
 import { DEFAULT_CHAIN_ID, CHAINDATA } from './config'
 import { chainId, signer, provider, address, currencyName } from './stores'
 import { showToast, hideModal } from './ui'
-import { getChainData } from './utils'
+import { getChainData, saveUserSetting } from './utils'
 
-chainId.set(DEFAULT_CHAIN_ID);
-let _provider = new ethers.providers.JsonRpcProvider(CHAINDATA[DEFAULT_CHAIN_ID].rpc);
+let _chainId = get(chainId)
+let _provider = new ethers.providers.JsonRpcProvider(CHAINDATA[_chainId].rpc);
 // const alchemySettings = getChainData('alchemy');
 // let _provider = new ethers.providers.AlchemyProvider(alchemySettings?.network, alchemySettings?.key);
 provider.set(_provider);
@@ -61,6 +62,7 @@ export async function connectWalletConnect() {
 
 		_walletConnect = new WalletConnectProvider.default({
 			rpc: {
+				31337: CHAINDATA[31337].rpc,
 				42161: CHAINDATA[42161].rpc
 			}
 		});
@@ -100,7 +102,7 @@ export async function disconnectWallet(force) {
 	signer.set(null);
 }
 
-export async function switchChains() {
+export async function switchChains(chain) {
 
 	let wallet;
 	if (window.ethereum) {
@@ -109,13 +111,31 @@ export async function switchChains() {
 		wallet = _walletConnect;
 	}
 
-	if (!wallet) return showToast("Can't connect to wallet.");
+	if (!wallet)
+	{
+		saveUserSetting('selectedChainId', parseInt(chain))
+		window.location.reload();
+	}
 
 	try {
-		await wallet.request({
-			method: 'wallet_switchEthereumChain',
-			params: [{ chainId: '0xA4B1' }],
-		});
+
+		let accounts = await _provider.send('eth_accounts');
+
+		if (!accounts || !accounts.length)
+		{
+			saveUserSetting('selectedChainId', parseInt(chain))
+			window.location.reload();
+		}
+		else
+		{
+			await wallet.request({
+				method: 'wallet_switchEthereumChain',
+				params: [{ chainId: chain }],
+			});
+
+			saveUserSetting('selectedChainId', parseInt(chain))
+		}
+
 	} catch (switchError) {
 		// This error code indicates that the chain has not been added to MetaMask.
 		if (switchError.code === 4902) {
@@ -123,17 +143,19 @@ export async function switchChains() {
 				await wallet.request({
 					method: 'wallet_addEthereumChain',
 					params: [{
-						chainId: '0xA4B1',
-						chainName: 'Arbitrum One',
-						rpcUrls: [CHAINDATA[42161]['rpc']],
-						nativeAsset: {
-							name: 'ETH',
-							symbol: 'ETH',
-							decimals: 18
+						chainId: chain,
+						chainName: CHAINDATA[parseInt(chain)]['chainName'],
+						rpcUrls: [CHAINDATA[parseInt(chain)]['rpc']],
+						nativeCurrency: {
+							name: CHAINDATA[parseInt(chain)]['nativeAssetName'],
+							symbol: CHAINDATA[parseInt(chain)]['nativeAssetSymbol'],
+							decimals: CHAINDATA[parseInt(chain)]['nativeAssetDecimals']
 						},
-						blockExplorerUrls: [CHAINDATA[42161]['explorer']]
+						blockExplorerUrls: [CHAINDATA[parseInt(chain)]['explorer']]
 					}],
 				});
+
+				saveUserSetting('selectedChainId', parseInt(chain))
 			} catch (addError) {
 				// handle "add" error
 			}

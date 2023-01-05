@@ -27,7 +27,12 @@ export const CHAINDATA = {
 			network: 'arbitrum',
 			wsNetwork: 'arb-mainnet'
 		},
-		chainlinkSchema: "ethereum-mainnet-arbitrum-1"
+		chainlinkSchema: "ethereum-mainnet-arbitrum-1",
+		chainName: "Local Testnet",
+		chainId: '0x7A69', //chainId number in hexadecimal prefixed by 0x 
+		nativeAssetName: "GO",
+		nativeAssetSymbol: "GO",
+		nativeAssetDecimals: 18,
 	},
 	42161: {
 		label: 'arbitrum',
@@ -37,17 +42,22 @@ export const CHAINDATA = {
 		currencyAddress: '', // USDC address
 		currencyDecimals: 6, // USDC
 		contracts: {
-			Trade: '0x22a9B82A6c3D2BFB68F324B2e8367f346Dd6f32a',
-			Pool: '0x547382C0D1b23f707918D3c83A77317B71Aa8470',
-			Store: '0x1343248Cbd4e291C6979e70a138f4c774e902561',
+			Trade: '0x0000000000000000000000000000000000000000',
+			Pool: '0x0000000000000000000000000000000000000000',
+			Store: '0x0000000000000000000000000000000000000000',
 		},
 		alchemy: {
 			key: 'gDY8gANK8VJAg508BzJbdCpmZ4N43IZP',
 			network: 'arbitrum',
 			wsNetwork: 'arb-mainnet'
 		},
-		chainlinkSchema: "ethereum-mainnet-arbitrum-1"
-	}
+		chainlinkSchema: "ethereum-mainnet-arbitrum-1",
+		chainName: 'Arbitrum One',
+		chainId: '0xA4B1', //chainId number in hexadecimal prefixed by 0x
+		nativeAssetName: 'ETH',
+		nativeAssetSymbol: 'ETH',
+		nativeAssetDecimals: 18,
+	},
 }
 export const CHAINLINK_URL = "https://atlas-postgraphile.public.main.prod.cldev.sh/graphql"
 export const CHAINLINK_CONTRACT_ADDRESSES = {

@@ -3,13 +3,17 @@
 
 	import { CHECKMARK_CIRCLE_ICON, GEAR_ICON } from '@lib/icons'
 	import { checkMetamaskSession, switchChains } from '@lib/connect'
-	import { address, unsupportedNetwork } from '@lib/stores'
+	import { address, unsupportedNetwork, chainId } from '@lib/stores'
 	import { showModal } from '@lib/ui'
 	import { shortAddress } from '@lib/utils'
+
+	import { CHAINDATA } from '@lib/config'
 
 	onMount(async () => {
 		await checkMetamaskSession();
 	});
+
+	let _chainId = $chainId
 
 </script>
 
@@ -18,6 +22,7 @@
 	.connect {
 		display: flex;
 		align-items: center;
+		gap: 10px; 
 	}
 
 	.settings {
@@ -79,6 +84,8 @@
 
 <div class='connect'>
 
+	<a class='address' on:click|stopPropagation={() => {showModal('ChainSelect')}}>{[CHAINDATA[_chainId]['chainName']]}</a>
+
 	{#if $address}
 		{#if $unsupportedNetwork}
 		<div class='address wrong-network' on:click={() => {switchChains()}}>
@@ -94,5 +101,4 @@
 	{:else}
 		<a class='connect' on:click|stopPropagation={() => {showModal('Connect')}}>Connect</a>
 	{/if}
-
 </div>
