@@ -11,7 +11,7 @@ export async function addLiquidity(amount) {
 		let tx = await contract.addLiquidity(amount);
 		let receipt = await tx.wait();
 		if (receipt && receipt.status == 1) {
-			showToast('Add liquidity succeeded.');
+			showToast('Add Liquidity succeeded.');
 			getPoolBalance();
 			getUserPoolBalance();
 			return true;
@@ -24,7 +24,7 @@ export async function addLiquidity(amount) {
 export async function removeLiquidity(amount) {
 	const contract = getContract({name: 'Pool', hasSigner: true});
 	try {
-		let tx = await contract.withdraw(amount);
+		let tx = await contract.removeLiquidity(amount);
 		let receipt = await tx.wait();
 		if (receipt && receipt.status == 1) {
 			showToast('Remove Liquidity succeeded.');

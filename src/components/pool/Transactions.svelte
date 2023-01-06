@@ -23,6 +23,7 @@
     flex-direction: column;
     gap: 15px;
     flex-basis: 1fr;
+    max-width: 50%;
  }
 
  .add-remove-title {
@@ -62,7 +63,7 @@
     </div>
     <div class='add-remove-wrapper'>
         <div class='add-remove-title'>Remove Liquidity</div>
-        <div class='add-remove-desc'>Withdraw at any time after a cooldown period has passed since your last deposit.</div>
+        <div class='add-remove-desc'>You can withdraw at any time with no cooldown period.</div>
         <Input label='Withdraw' bind:value={withdrawAmount}></Input>
         <button class='primary button gray' on:click|stopPropagation={() => {removeLiquidity(parseUnits(withdrawAmount, 6))}}>Remove Liquidity</button>
         <div class='add-remove-desc'>{`Withdrawal Fee: ${$poolWithdrawalFee}%`}</div>

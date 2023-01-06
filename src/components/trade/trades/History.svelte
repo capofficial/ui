@@ -82,7 +82,11 @@ $: fetchData($address);
           <Cell>{formatForDisplay(formatUnits(history.price, 18))}</Cell>
           {#if Number(formatUnits(history.pnl,6)) == 0}
             {#if history.isReduceOnly}
+              {#if history.status == 'cancelled'}
+              <Cell>-</Cell>
+              {:else}
               <Cell>{formatForDisplay(formatUnits(history.pnl, 6))}</Cell>
+              {/if}
             {:else}
               <Cell>-</Cell>
             {/if}
