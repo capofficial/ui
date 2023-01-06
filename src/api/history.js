@@ -1,10 +1,11 @@
-import { address } from '@lib/stores'
+import { address, chainId } from '@lib/stores'
 import { HISTORY_URL } from '@lib/config'
 import { get } from 'svelte/store'
 
 export async function getUserHistory() {
 
     let _address = get(address)
+    let _chainId = get(chainId)
 
 	if (_address == null)
     {
@@ -13,7 +14,7 @@ export async function getUserHistory() {
     else
     {    
         try {        
-            const response = await fetch(HISTORY_URL, {
+            const response = await fetch(HISTORY_URL[_chainId], {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

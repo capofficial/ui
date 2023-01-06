@@ -23,9 +23,9 @@ export const CHAINDATA = {
 			Store: '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0',
 		},
 		alchemy: {
-			key: 'gDY8gANK8VJAg508BzJbdCpmZ4N43IZP',
-			network: 'arbitrum',
-			wsNetwork: 'arb-mainnet'
+			key: 'testkey',
+			network: 'testnetwork',
+			wsNetwork: 'testwsnetwork'
 		},
 		chainlinkSchema: "ethereum-mainnet-arbitrum-1",
 		chainName: "Local Testnet",
@@ -65,4 +65,7 @@ export const CHAINLINK_CONTRACT_ADDRESSES = {
 	'ETH-USD': "0x3607e46698d218b3a5cae44bf381475c0a5e2ca7"
 }
 
-export const HISTORY_URL = "http://localhost:8000/subgraphs/name/cap-subgraph"
+export const HISTORY_URL = {
+	31337: "http://localhost:8000/subgraphs/name/cap-subgraph", //local testnet
+	42161: "http://localhost:8000/arbitrum-subgraph" //arbitrum
+}
