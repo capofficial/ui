@@ -58,7 +58,7 @@ export async function getUserHistory() {
                 })
             });
             const json = await response.json();
-            console.log("JSON RESPONSE", json)
+            //console.log("JSON RESPONSE", json)
             const orders = json?.data.orders
             return orders;
         } catch (e) {

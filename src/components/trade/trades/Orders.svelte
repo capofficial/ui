@@ -11,6 +11,7 @@
   import { formatUnits, formatDate, formatSide, formatForDisplay, formatOrderType, formatMarketName } from '@lib/formatters'
   import { XMARK_ICON, PENCIL_ICON, LOADING_ICON } from '@lib/icons'
   import { DEFAULT_ORDERS_SORT_KEY } from '@lib/config'
+  import { showModal } from '@lib/ui'
 
   import Table from '@components/layout/table/Table.svelte'
   import Row from '@components/layout/table/Row.svelte'
@@ -61,8 +62,11 @@
       <Cell>{formatForDisplay(formatUnits(order.margin, 6))}</Cell>
       <Cell>{formatOrderType(order.orderType)}</Cell>
       <Cell isTools={true}>
-				<a on:click|stopPropagation={() => { _cancelOrder(order.orderId) }}>{#if ordersCancelling[order.orderId]}{@html XMARK_ICON}{:else}{@html XMARK_ICON}{/if}</a>
-			</Cell>
+				{#if order.orderType !== 0}
+          <a on:click|stopPropagation={() => { showModal('EditOrder', order) }}>{@html PENCIL_ICON}</a>
+          <a on:click|stopPropagation={() => { _cancelOrder(order.orderId) }}>{#if ordersCancelling[order.orderId]}{@html XMARK_ICON}{:else}{@html XMARK_ICON}{/if}</a>
+        {/if}
+        </Cell>
     </Row>
 		{/each}
 	</div>
