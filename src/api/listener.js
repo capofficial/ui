@@ -40,7 +40,7 @@ export async function listenToEvents() {
 	let iface = new ethers.utils.Interface(EVENT_ABIS)
 
 	
-	 const trade = await getContract('Orders');
+	 const trade = await getContract({name: 'Trade'});
 	 ws.on(trade.filters.OrderCreated(null, _address), (log) => {
 	 	// console.log('log', log);
 	 	if (inCache(log)) return;
@@ -97,7 +97,7 @@ export async function listenToEvents() {
 	 	showToast('Position Liquidated.', 1);
 	 });
 
-	 const pool = await getContract('Pool');
+	 const pool = await getContract({name: 'Pool'});
 	 ws.on(pool.filters.PoolPayIn(), (log) => {
 	 	if (inCache(log)) return;
 	 	getPoolBalance();
