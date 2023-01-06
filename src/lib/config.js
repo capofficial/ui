@@ -28,6 +28,7 @@ export const CHAINDATA = {
 			wsNetwork: 'testwsnetwork'
 		},
 		chainlinkSchema: "ethereum-mainnet-arbitrum-1",
+		subgraphUrl: "http://localhost:8000/subgraphs/name/cap-subgraph",
 		chainName: "Local Testnet",
 		chainId: '0x7A69', //chainId number in hexadecimal prefixed by 0x 
 		nativeAssetName: "GO",
@@ -52,6 +53,7 @@ export const CHAINDATA = {
 			wsNetwork: 'arb-mainnet'
 		},
 		chainlinkSchema: "ethereum-mainnet-arbitrum-1",
+		subgraphUrl: "http://localhost:8000/arbitrum-subgraph",
 		chainName: 'Arbitrum One',
 		chainId: '0xA4B1', //chainId number in hexadecimal prefixed by 0x
 		nativeAssetName: 'ETH',
@@ -63,9 +65,4 @@ export const CHAINLINK_URL = "https://atlas-postgraphile.public.main.prod.cldev.
 export const CHAINLINK_CONTRACT_ADDRESSES = {
 	'BTC-USD': "0x942d00008d658dbb40745bbec89a93c253f9b882",
 	'ETH-USD': "0x3607e46698d218b3a5cae44bf381475c0a5e2ca7"
-}
-
-export const HISTORY_URL = {
-	31337: "http://localhost:8000/subgraphs/name/cap-subgraph", //local testnet
-	42161: "http://localhost:8000/arbitrum-subgraph" //arbitrum
 }

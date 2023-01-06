@@ -1,5 +1,5 @@
 import { address, chainId } from '@lib/stores'
-import { HISTORY_URL } from '@lib/config'
+import { CHAINDATA } from '@lib/config'
 import { get } from 'svelte/store'
 
 export async function getUserHistory() {
@@ -14,7 +14,7 @@ export async function getUserHistory() {
     else
     {    
         try {        
-            const response = await fetch(HISTORY_URL[_chainId], {
+            const response = await fetch(CHAINDATA[_chainId]['subgraphUrl'], {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
