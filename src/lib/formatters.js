@@ -154,14 +154,13 @@ export function formatMarket(market) {
 
 	return {
 		'Name': market.symbol,
-		'Category': 'Crypto',
-		'Chainlink Execution Allowed': market.allowChainlinkExecution ? 'Yes' : 'No',
+		'Price': market.price,
+		'Funding Factor': `${formatForDisplay(100 * market.fundingFactor / BPS_DIVIDER)}%`,
+		'Max Leverage': `${market.maxLeverage}x`,
+		'Max Open Interest': formatForDisplay(formatUnits(market.maxOI, 6)),
+		'Min Size': formatForDisplay(formatUnits(market.minSize, 6)),
+		'Min Settlement Time': `${market.minSettlementTime}s`,
 		'Fee': `${formatForDisplay(100 * market.fee / BPS_DIVIDER)}%`,
-		// 'Is Closed': market.isClosed ? 'Yes' : 'No',
-		// 'Liquidation Threshold': `${formatForDisplay(100 * market.liqThreshold / BPS_DIVIDER)}%`,
-		// 'Max Deviation vs Chainlink': `${formatForDisplay(100 * market.maxDeviation / BPS_DIVIDER)}%`,
-		'Max Leverage': market.maxLeverage,
-		// 'Only Reduce-Only Allowed': market.isReduceOnly ? 'Yes' : 'No'
 	}
 
 }
@@ -176,6 +175,19 @@ export function formatHistory(history) {
 		historyData = {
 			'Market': history.market,
 			'Side': `Liquidated ${formatSide(history.isLong)}`,
+			'Price': `${formatForDisplay(Number(formatUnits(history.price, 18)))}`,
+			'Size': `${formatForDisplay(Number(formatUnits(history.size), 6))}`,
+			'Margin': `${formatForDisplay(Number(formatUnits(history.margin), 6))}`,
+			'PnL': `${formatForDisplay(Number(formatUnits(history.pnl), 6))}`,
+			'Fee': `${formatForDisplay(Number(formatUnits(history.fee), 6))}`,
+			'Date': `${formatDate(history.timestamp)}`
+		}
+	}
+	else if (history.status == 'cancelled')
+	{
+		historyData = {
+			'Market': history.market,
+			'Side': `Cancel ${formatSide(history.isLong)}`,
 			'Price': `${formatForDisplay(Number(formatUnits(history.price, 18)))}`,
 			'Size': `${formatForDisplay(Number(formatUnits(history.size), 6))}`,
 			'Margin': `${formatForDisplay(Number(formatUnits(history.margin), 6))}`,

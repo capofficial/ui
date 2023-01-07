@@ -31,7 +31,7 @@
 <div class='wrapper' class:small={isSmall}>
 	{#each data as item}
 		<div class='row'>
-			<LabelValue label={item.label} value={item.value} />
+			<LabelValue label={item.label} value={item.value} note={item.note}/>
 		</div>
 	{/each}
 </div>

@@ -8,6 +8,7 @@
   import Slider from "../../layout/Slider.svelte";
 	import { getUserBalance } from '@api/account'
   import { markets, selectedMarketInfo } from '@lib/stores'
+  import { BPS_DIVIDER } from '@lib/config'
 	import { selectedMarket, balance, size, price, leverage, currencyName, margin, freeMargin, maxSize, tpPrice, slPrice, hasTPSL, isReduceOnly, orderType, isLong } from '@lib/stores'
   import { submitOrder } from '@api/orders'
   import { formatForDisplay } from '@lib/formatters'
@@ -343,8 +344,8 @@ $: getPriceType($orderType, $selectedMarketInfo)
       <div class='flex right'>{formatForDisplay($margin)} {$currencyName}</div>
     </div>
     <div class='flex container'>
-      <div class='flex'>Fee (0.1%)</div>
-      <div class='flex right'>{formatForDisplay($size * 0.001)} {$currencyName}</div>
+      <div class='flex'>{`Fee (${(100 * $selectedMarketInfo.fee) / BPS_DIVIDER}%)`}</div>
+      <div class='flex right'>{formatForDisplay($size * ($selectedMarketInfo.fee / BPS_DIVIDER))} {$currencyName}</div>
     </div>
   </div>
 </div>

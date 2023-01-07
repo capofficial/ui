@@ -66,6 +66,6 @@
         <div class='add-remove-desc'>You can withdraw at any time with no cooldown period.</div>
         <Input label='Withdraw' bind:value={withdrawAmount}></Input>
         <button class='primary button gray' on:click|stopPropagation={() => {removeLiquidity(parseUnits(withdrawAmount, 6))}}>Remove Liquidity</button>
-        <div class='add-remove-desc'>{`Withdrawal Fee: ${$poolWithdrawalFee}%`}</div>
+        <div class='add-remove-desc'>{`Withdrawal Fee: ${(100 * $poolWithdrawalFee)}%`}</div>
     </div>
 </div>
