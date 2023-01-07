@@ -344,8 +344,8 @@ $: getPriceType($orderType, $selectedMarketInfo)
       <div class='flex right'>{formatForDisplay($margin)} {$currencyName}</div>
     </div>
     <div class='flex container'>
-      <div class='flex'>{`Fee (${(100 * $selectedMarketInfo.fee) / BPS_DIVIDER}%)`}</div>
-      <div class='flex right'>{formatForDisplay($size * ($selectedMarketInfo.fee / BPS_DIVIDER))} {$currencyName}</div>
+      <div class='flex'>{$selectedMarketInfo.fee ? `Fee (${(100 * $selectedMarketInfo.fee) / BPS_DIVIDER}%)` : 'Fee (---)'}</div>
+      <div class='flex right'>{$selectedMarketInfo.fee ? `${formatForDisplay($size * ($selectedMarketInfo.fee / BPS_DIVIDER))} ${$currencyName}` : `0 ${$currencyName}`}</div>
     </div>
   </div>
 </div>

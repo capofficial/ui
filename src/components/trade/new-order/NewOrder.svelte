@@ -1,9 +1,11 @@
 <script>
-  import { selectedMarketInfo } from "@lib/stores";
+  import { selectedMarketInfo, fundingRate } from "@lib/stores";
   import { showModal } from "@lib/ui";
   import { INFO_ICON_CIRCLE } from "@lib/icons";
   import Chart from "../Chart/Chart.svelte";
   import CreateNewOrder from "./CreateNewOrder.svelte";
+  import { getFundingRate } from '@api/markets';
+  import { formatForDisplay } from '@lib/formatters'
   /* TODO
 	- For a boilerplate, see Account.svelte
 	- Should have a header with the the selectedMarket and latest price (spaced between), as well as the funding rate
@@ -20,6 +22,15 @@
 		- Below the buy button: Margin and its value
 		- Below the sell button: Fee and its value
 	*/
+  
+  let t;
+	async function fetchFundingData() {
+		clearTimeout(t);
+		getFundingRate($selectedMarketInfo.symbol);
+		t = setTimeout(fetchFundingData, 300*1000);
+	}
+  $: fetchFundingData($selectedMarketInfo.symbol)
+
 </script>
 
 <div class="new-order">
@@ -33,6 +44,18 @@
           showModal("MarketInfo", $selectedMarketInfo)}
       >
         {@html INFO_ICON_CIRCLE}
+      </div>
+    </div>
+    <div class='funding'>
+      <div class='funding-label'>
+        Funding
+      </div>
+      <div>
+      {#if $fundingRate > 0}
+        {`+${formatForDisplay($fundingRate)}%`}
+      {:else}
+        {`${formatForDisplay($fundingRate)}%`}
+      {/if}
       </div>
     </div>
     <div class="price">{$selectedMarketInfo.price}</div>
@@ -62,6 +85,14 @@
   .selected-market {
     font-size: 16px;
     display: flex;
+  }
+  .funding {
+    flex-grow: 1;
+    margin-left: 16px;
+  }
+  .funding-label {
+    opacity: 0.5;
+    font-weight: 400;
   }
   .price {
     font-size: 14px;
