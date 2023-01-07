@@ -69,7 +69,7 @@ $: fetchData($address)
 	.subtitle {
 		color: var(--text300);
 		align-self: center;
-		margin-top: 4px;
+		margin-top: 3px;
 	}
 
 </style>

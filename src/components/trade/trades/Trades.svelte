@@ -82,9 +82,10 @@ let panel = 'positions'
 		height: 251px;
 		background-color: var(--layer50);
 	}
+
 	.history {
 		grid-area: history;
-		height: 311px;
+		height: 312px;
 		background-color: var(--layer50);
 	}
 
@@ -127,5 +128,8 @@ let panel = 'positions'
 		{#if panel == 'positions'}<div class='positions'><Positions allColumns={allColumns['positions']}/></div>{/if}
 		{#if panel == 'orders'}<div class='orders'><Orders allColumns={allColumns['orders']}/></div>{/if}
 	</div>		
-	<div class='history'><History /></div>
+	<div class='history'>
+		<div class='nav'>History</div>
+		<History />
+	</div>
 </div>

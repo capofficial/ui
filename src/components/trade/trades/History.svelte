@@ -53,11 +53,6 @@ $: fetchData($address);
 </script>
 
 <div class='history-section'>
-	<div class='header'>
-		<div class='label'>
-			History
-		</div>
-	</div>
 	<Table
   columns={columns}
   isLoading={false}
@@ -120,7 +115,7 @@ $: fetchData($address);
   }
 
   .history-section {
-      height: 250px;
+      height: 251px;
   }
 
   a {
