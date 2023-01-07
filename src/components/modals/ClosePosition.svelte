@@ -420,7 +420,7 @@
 			</div>
 
 			<div class='row'>
-				<LabelValue label='Size to Close (%)' value={formatForDisplay(sizeToClosePercent)}/>
+				<LabelValue label='Size to Close (%)' value={sizeToClosePercent}/>
 			</div>
 
 			
@@ -429,7 +429,7 @@
 			</div>
 
 			<div class='row bottom-spacing'>
-				<LabelValue label='Fee' value={formatForDisplay(totalFee)}/>
+				<LabelValue label='Fee' value={totalFee}/>
 			</div>
 
 			<div class='stop-type bottom-spacing'>
