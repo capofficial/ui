@@ -187,7 +187,7 @@ export function formatHistory(history) {
 	{
 		historyData = {
 			'Market': history.market,
-			'Side': `Cancel ${formatSide(history.isLong)}`,
+			'Side': `Cancel ${formatSide(history.isLong, history.isReduceOnly, history.pnl)}`,
 			'Price': `${formatForDisplay(Number(formatUnits(history.price, 18)))}`,
 			'Size': `${formatForDisplay(Number(formatUnits(history.size), 6))}`,
 			'Margin': `${formatForDisplay(Number(formatUnits(history.margin), 6))}`,

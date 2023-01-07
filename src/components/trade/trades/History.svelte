@@ -72,7 +72,7 @@ $: fetchData($address);
               <Cell hasClass={history.isLong ? 'green' : 'red'}>{`Open ${formatSide(history.isLong)}`}</Cell>
             {/if}
           {:else if history.status == 'cancelled'}
-            <Cell hasClass={history.isLong ? 'green' : 'red'}>{`Cancel ${formatSide(history.isLong)}`}</Cell>
+            <Cell hasClass={history.isLong ? 'green' : 'red'}>{`Cancel ${formatSide(history.isLong, history.isReduceOnly, history.pnl)}`}</Cell>
           {/if}
           <Cell>{formatForDisplay(formatUnits(history.price, 18))}</Cell>
           {#if Number(formatUnits(history.pnl,6)) == 0}
