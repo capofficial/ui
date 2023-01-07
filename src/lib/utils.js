@@ -3,6 +3,8 @@ import { get } from 'svelte/store'
 import { CHAINDATA } from './config'
 import { chainId } from './stores'
 
+import { ethers } from 'ethers'
+
 export function hashString(_string) {
   var hash = 0,
     i, chr;
@@ -50,4 +52,31 @@ export function getChainData(key) {
 	const _chainId = get(chainId);
 	if (!_chainId || !CHAINDATA[_chainId]) return;
 	return CHAINDATA[_chainId][key];
+}
+
+export async function getBlock(blockNumber) {
+	if (!blockNumber) return;
+	let _provider = new ethers.providers.JsonRpcProvider(CHAINDATA[42161].rpc);
+	let block = await _provider.getBlock(blockNumber);
+	return block;
+}
+
+export async function getLatestBlock() {
+	let _provider = new ethers.providers.JsonRpcProvider(CHAINDATA[42161].rpc);
+	let latestBlock = await _provider.getBlock("latest");
+	return latestBlock;
+}
+
+export function getUPL(position, latestPrice) {
+	let upl = 0;
+	if (position.price * 1 == 0) return undefined;
+
+	if (latestPrice) {
+		if (position.isLong) {
+			upl = position.size * (latestPrice * 1 - position.price * 1) / position.price;
+		} else {
+			upl = position.size * (position.price * 1 - latestPrice * 1) / position.price;
+		}
+	}
+	return upl;
 }

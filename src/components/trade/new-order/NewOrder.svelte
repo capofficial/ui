@@ -1,5 +1,12 @@
 <script>
-	/* TODO
+  import { selectedMarketInfo, fundingRate } from "@lib/stores";
+  import { showModal } from "@lib/ui";
+  import { INFO_ICON_CIRCLE } from "@lib/icons";
+  import Chart from "../Chart/Chart.svelte";
+  import CreateNewOrder from "./CreateNewOrder.svelte";
+  import { getFundingRate } from '@api/markets';
+  import { formatForDisplay } from '@lib/formatters'
+  /* TODO
 	- For a boilerplate, see Account.svelte
 	- Should have a header with the the selectedMarket and latest price (spaced between), as well as the funding rate
 		- Should have an info icon to display market info modal when clicked
@@ -15,6 +22,92 @@
 		- Below the buy button: Margin and its value
 		- Below the sell button: Fee and its value
 	*/
+  
+  let t;
+	async function fetchFundingData() {
+		clearTimeout(t);
+		getFundingRate($selectedMarketInfo.symbol);
+		t = setTimeout(fetchFundingData, 300*1000);
+	}
+  $: fetchFundingData($selectedMarketInfo.symbol)
+
 </script>
 
-new order
+<div class="new-order">
+  <div class="header">
+    <div class="selected-market">
+      {$selectedMarketInfo.symbol}
+      <!-- svelte-ignore a11y-click-events-have-key-events -->
+      <div
+        class="info-icon"
+        on:click|stopPropagation={() =>
+          showModal("MarketInfo", $selectedMarketInfo)}
+      >
+        {@html INFO_ICON_CIRCLE}
+      </div>
+    </div>
+    <div class='funding'>
+      <div class='funding-label'>
+        Funding
+      </div>
+      <div>
+      {#if $fundingRate > 0}
+        {`+${formatForDisplay($fundingRate)}%`}
+      {:else}
+        {`${formatForDisplay($fundingRate)}%`}
+      {/if}
+      </div>
+    </div>
+    <div class="price">{$selectedMarketInfo.price}</div>
+  </div>
+  <div class="chart">
+    <div id="chart">
+      <Chart />
+    </div>
+  </div>
+  <div>
+		<CreateNewOrder />
+  </div>
+</div>
+
+<style>
+  .header {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    border-bottom: 1px solid var(--layerDark);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 85%;
+    justify-content: space-between;
+  }
+  .selected-market {
+    font-size: 16px;
+    display: flex;
+  }
+  .funding {
+    flex-grow: 1;
+    margin-left: 16px;
+  }
+  .funding-label {
+    opacity: 0.5;
+    font-weight: 400;
+  }
+  .price {
+    font-size: 14px;
+  }
+  .info-icon {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    margin-left: 10px;
+  }
+  .info-icon :global(svg) {
+    fill: var(--text200);
+    width: 18px;
+  }
+  .chart {
+    border-bottom: 1px solid var(--layerDark);
+  }
+</style>

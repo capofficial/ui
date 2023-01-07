@@ -1,8 +1,9 @@
 import { get } from 'svelte/store'
 import { ethers } from 'ethers'
 import { ADDRESS_ZERO, BPS_DIVIDER } from './config'
-import { locale } from './stores'
+import { locale, upl } from './stores'
 import { getChainData } from './utils'
+import { DEFAULT_CHAIN_ID, CHAINDATA } from './config'
 
 export function formatUnits(amount, decimals) {
 	if (!amount) return 0;
@@ -152,16 +153,64 @@ export function formatMarket(market) {
 	if (!market) return;
 
 	return {
-		'Name': market.name,
-		'Category': market.category,
-		'Chainlink Execution Allowed': market.allowChainlinkExecution ? 'Yes' : 'No',
+		'Name': market.symbol,
+		'Price': market.price,
+		'Funding Factor': `${formatForDisplay(100 * market.fundingFactor / BPS_DIVIDER)}%`,
+		'Max Leverage': `${market.maxLeverage}x`,
+		'Max Open Interest': formatForDisplay(formatUnits(market.maxOI, 6)),
+		'Min Size': formatForDisplay(formatUnits(market.minSize, 6)),
+		'Min Settlement Time': `${market.minSettlementTime}s`,
 		'Fee': `${formatForDisplay(100 * market.fee / BPS_DIVIDER)}%`,
-		'Is Closed': market.isClosed ? 'Yes' : 'No',
-		'Liquidation Threshold': `${formatForDisplay(100 * market.liqThreshold / BPS_DIVIDER)}%`,
-		'Max Deviation vs Chainlink': `${formatForDisplay(100 * market.maxDeviation / BPS_DIVIDER)}%`,
-		'Max Leverage': market.maxLeverage,
-		'Only Reduce-Only Allowed': market.isReduceOnly ? 'Yes' : 'No'
 	}
+
+}
+
+export function formatHistory(history) {
+
+	if (!history) return;
+
+	let historyData
+	if (history.status == 'liquidated')
+	{
+		historyData = {
+			'Market': history.market,
+			'Side': `Liquidated ${formatSide(history.isLong)}`,
+			'Price': `${formatForDisplay(Number(formatUnits(history.price, 18)))}`,
+			'Size': `${formatForDisplay(Number(formatUnits(history.size), 6))}`,
+			'Margin': `${formatForDisplay(Number(formatUnits(history.margin), 6))}`,
+			'PnL': `${formatForDisplay(Number(formatUnits(history.pnl), 6))}`,
+			'Fee': `${formatForDisplay(Number(formatUnits(history.fee), 6))}`,
+			'Date': `${formatDate(history.timestamp)}`
+		}
+	}
+	else if (history.status == 'cancelled')
+	{
+		historyData = {
+			'Market': history.market,
+			'Side': `Cancel ${formatSide(history.isLong, history.isReduceOnly, history.pnl)}`,
+			'Price': `${formatForDisplay(Number(formatUnits(history.price, 18)))}`,
+			'Size': `${formatForDisplay(Number(formatUnits(history.size), 6))}`,
+			'Margin': `${formatForDisplay(Number(formatUnits(history.margin), 6))}`,
+			'PnL': `${formatForDisplay(Number(formatUnits(history.pnl), 6))}`,
+			'Fee': `${formatForDisplay(Number(formatUnits(history.fee), 6))}`,
+			'Date': `${formatDate(history.timestamp)}`
+		}
+	}
+	else
+	{
+		historyData = {
+			'Market': history.market,
+			'Side': `${formatSide(history.isLong, history.isReduceOnly, history.pnl)}`,
+			'Price': `${formatForDisplay(Number(formatUnits(history.price, 18)))}`,
+			'Size': `${formatForDisplay(Number(formatUnits(history.size), 6))}`,
+			'Margin': `${formatForDisplay(Number(formatUnits(history.margin), 6))}`,
+			'PnL': `${formatForDisplay(Number(formatUnits(history.pnl), 6))}`,
+			'Fee': `${formatForDisplay(Number(formatUnits(history.fee), 6))}`,
+			'Date': `${formatDate(history.timestamp)}`
+		}
+	}
+
+	return historyData
 
 }
 
@@ -206,6 +255,24 @@ export function formatPosition(position) {
 	position.price = formatUnits(position.price);
 	position.leverage = Math.ceil(position.size * 1000 / position.margin)/1000;
 	return position;
+}
+
+export function formatPositionNew(position) {
+	if (!position) return;
+
+	position = {
+		user: position.user,
+		market: position.market,
+		price: formatUnits(position.price, 18),
+		size: formatUnits(position.size, 6),
+		margin: formatUnits(position.margin, 6),
+		upl: formatUnits(position.upl, 6),
+		isLong: position.isLong,
+		fundingTracker: formatUnits(position.fundingTracker, 6),
+		timestamp: position.timestamp,
+	}
+
+	return position
 }
 
 export function formatHistoryItem(item) {

@@ -33,10 +33,6 @@
 		border-bottom: 1px solid var(--layerDark);
 		font-weight: 600;
 		text-transform: uppercase;
-		font-size: 85%;
-	}
-	.account {
-		
 	}
 	.data {
 		display: flex;
@@ -48,6 +44,40 @@
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
+	}
+	.label, .value {
+		font-size: 14px;
+	}
+	button {
+		flex: 50%;
+		margin: 5px;
+		padding: 10px 5px;
+		width: 75%;
+	}
+	.buttons {
+		display: flex;
+    	justify-content: space-around;
+		align-items: center;
+		margin: 0 10px;
+	}
+	.gray {
+		background-color: var(--layer200);
+		color: white;
+	}
+	.gray:hover {
+		background-color: var(--layer300);
+	}
+	@media screen and (max-width: 900px) {
+		.buttons {
+			flex-direction: column;
+			margin: 0;
+		}
+		button {
+			flex: 50%;
+			margin: 5px 10px;
+			padding: 10px 5px;
+			width: 90%;
+		}
 	}
 </style>
 
@@ -79,8 +109,8 @@
 			<div class="value">{$marginLevel == Infinity ? "∞" : `${formatForDisplay($marginLevel)}%`}</div>
 		</div>
 	</div>
-	<div class="buttons">
-		<button on:click|stopPropagation={() => {showModal('Deposit')}}>Deposit</button>
-		<button on:click|stopPropagation={() => {showModal('Withdraw')}}>Withdraw</button>
+	<div class='buttons'>
+		<button class="primary gray" on:click|stopPropagation={() => {showModal('Deposit')}}>Deposit</button>
+		<button class="primary gray" on:click|stopPropagation={() => {showModal('Withdraw')}}>Withdraw</button>
 	</div>
 </div>

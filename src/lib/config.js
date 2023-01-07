@@ -23,10 +23,17 @@ export const CHAINDATA = {
 			Store: '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0',
 		},
 		alchemy: {
-			key: 'gDY8gANK8VJAg508BzJbdCpmZ4N43IZP',
-			network: 'arbitrum',
-			wsNetwork: 'arb-mainnet'
-		}
+			key: 'testkey',
+			network: 'testnetwork',
+			wsNetwork: 'ws://localhost:8545/'
+		},
+		chainlinkSchema: "ethereum-mainnet-arbitrum-1",
+		subgraphUrl: "http://localhost:8000/subgraphs/name/cap-subgraph",
+		chainName: "Local Testnet",
+		chainId: '0x7A69', //chainId number in hexadecimal prefixed by 0x 
+		nativeAssetName: "GO",
+		nativeAssetSymbol: "GO",
+		nativeAssetDecimals: 18,
 	},
 	42161: {
 		label: 'arbitrum',
@@ -36,14 +43,26 @@ export const CHAINDATA = {
 		currencyAddress: '', // USDC address
 		currencyDecimals: 6, // USDC
 		contracts: {
-			Trade: '0xB7f8BC63BbcaD18155201308C8f3540b07f84F5e',
-			Pool: '0xA51c1fc2f0D1a1b8494Ed1FE312d7C3a78Ed91C0',
-			Store: '0x610178dA211FEF7D417bC0e6FeD39F05609AD788',
+			Trade: '0x0000000000000000000000000000000000000000',
+			Pool: '0x0000000000000000000000000000000000000000',
+			Store: '0x0000000000000000000000000000000000000000',
 		},
 		alchemy: {
 			key: 'gDY8gANK8VJAg508BzJbdCpmZ4N43IZP',
 			network: 'arbitrum',
 			wsNetwork: 'arb-mainnet'
-		}
-	}
+		},
+		chainlinkSchema: "ethereum-mainnet-arbitrum-1",
+		subgraphUrl: "http://localhost:8000/arbitrum-subgraph",
+		chainName: 'Arbitrum One',
+		chainId: '0xA4B1', //chainId number in hexadecimal prefixed by 0x
+		nativeAssetName: 'ETH',
+		nativeAssetSymbol: 'ETH',
+		nativeAssetDecimals: 18,
+	},
+}
+export const CHAINLINK_URL = "https://atlas-postgraphile.public.main.prod.cldev.sh/graphql"
+export const CHAINLINK_CONTRACT_ADDRESSES = {
+	'BTC-USD': "0x942d00008d658dbb40745bbec89a93c253f9b882",
+	'ETH-USD': "0x3607e46698d218b3a5cae44bf381475c0a5e2ca7"
 }

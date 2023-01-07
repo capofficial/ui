@@ -2,30 +2,30 @@ const orderTuple = `tuple(
 	uint256 orderId,
 	address user,
 	string market,
+	uint256 price,
+	bool isLong,
+	bool isReduceOnly,
+	uint8 orderType,
 	uint256 margin,
 	uint256 size,
-	uint256 price,
 	uint256 fee,
-	bool isLong,
-	uint8 orderType,
-	bool isReduceOnly,
 	uint256 timestamp
 )`;
 
 const positionTuple = `tuple(
 	address user,
 	string market,
-	uint256 margin,
-	uint256 size,
-	uint256 price,
 	bool isLong,
+	uint256 size,
+	uint256 margin,
 	int256 fundingTracker,
-	uint256 timestamp
+	uint256 price,
+	uint256 timestamp,
 )`;
 
 const marketTuple = `tuple(
 	string symbol,
-	address fee,
+	address feed,
 	uint256 maxLeverage,
 	uint256 maxOI,
 	uint256 fee,

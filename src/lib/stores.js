@@ -1,7 +1,7 @@
 import { ethers } from 'ethers'
 import { writable, derived } from 'svelte/store'
 import { getUserSetting } from './utils'
-import { DEFAULT_LOCALE, DEFAULT_MARKET, DEFAULT_CURRENCY, DEFAULT_LEVERAGE, BPS_DIVIDER, DEFAULT_MARKETS_SORT_KEY, DEFAULT_ORDERS_SORT_KEY, DEFAULT_POSITIONS_SORT_KEY } from './config'
+import { DEFAULT_LOCALE, DEFAULT_MARKET, DEFAULT_CURRENCY, DEFAULT_LEVERAGE, BPS_DIVIDER, DEFAULT_MARKETS_SORT_KEY, DEFAULT_ORDERS_SORT_KEY, DEFAULT_POSITIONS_SORT_KEY, DEFAULT_CHAIN_ID } from './config'
 
 // Language
 export const locale = writable(getUserSetting('locale') || DEFAULT_LOCALE);
@@ -28,7 +28,7 @@ export const activeError = writable();
 
 // Contracts
 export const provider = writable();
-export const chainId = writable();
+export const chainId = writable(getUserSetting('selectedChainId') == undefined ? DEFAULT_CHAIN_ID : getUserSetting('selectedChainId'));
 export const signer = writable();
 export const address = writable();
 export const unsupportedNetwork = writable();
