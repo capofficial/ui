@@ -8,21 +8,21 @@ The items below are listed in non-priority order. All milestones are **ASAP**, w
 
 The contracts that this UI interacts with are in the [protocol](https://github.com/capofficial/protocol) repo. It would probably be wise to run and connect to those contracts locally to be able to test UI changes quickly.
 
-- [ ] Component: Account, showing balance, equity, locked margin, free margin, margin level, buttons to deposit and withdraw
-- [ ] Component: Deposit / Withdraw modal
-- [ ] Component: New Order
-- [ ] Component: Chart, with price history pulled from Chainlink APIs
-- [ ] Component: Ticker, showing selected market symbol, latest price, and funding rate
-- [ ] Component: Markets, showing list of market symbols with latest prices
-- [ ] Component: Positions, showing list of active positions
-- [ ] Component: Close Position modal
-- [ ] Component: Orders, showing list of active orders
-- [ ] Subgraph: a separate repo that includes a simple subgraph to query historical trades
-- [ ] Component: History, showing list of past trades, pulled from subgraph
+- [x] Component: Account, showing balance, equity, locked margin, free margin, margin level, buttons to deposit and withdraw
+- [x] Component: Deposit / Withdraw modal
+- [x] Component: New Order
+- [x] Component: Chart, with price history pulled from Chainlink APIs
+- [x] Component: Ticker, showing selected market symbol, latest price, and funding rate
+- [x] Component: Markets, showing list of market symbols with latest prices
+- [x] Component: Positions, showing list of active positions
+- [x] Component: Close Position modal
+- [x] Component: Orders, showing list of active orders
+- [x] Subgraph: a separate repo that includes a simple subgraph to query historical trades
+- [x] Component: History, showing list of past trades, pulled from subgraph
 - [ ] Easy trade sharing for both active positions and historical trades
 - [ ] Ability to export history to CSV, with a modal to determine the timeframe to export. This should probably use a web worker to avoid it blocking the UI in cases where the amount of items to export is big.
-- [ ] Component: Pool, showing pool balance, buffer balance, user pool balance, add liquidity, remove liquidity
-- [ ] Component: Network selector (top-right) to switch between chains
+- [x] Component: Pool, showing pool balance, buffer balance, user pool balance, add liquidity, remove liquidity
+- [x] Component: Network selector (top-right) to switch between chains
 - [ ] Error strings should be synced with new contracts
 - [ ] Mobile UI
 
