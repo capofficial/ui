@@ -22,6 +22,8 @@ function inCache(log) {
 
 export async function listenToEvents() {
 
+	return; // TEST
+
 	const alchemySettings = getChainData('alchemy');
 	if (!alchemySettings) return;
 	const alchemy = new Alchemy({network: alchemySettings.wsNetwork, apiKey: alchemySettings.key});

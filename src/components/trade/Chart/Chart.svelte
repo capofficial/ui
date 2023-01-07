@@ -61,6 +61,8 @@ async function getChartData() {
         CHAINLINK_CONTRACT_ADDRESSES[$selectedMarketInfo.symbol]
       );
 
+      if (!priceHistory) return;
+
       priceHistory = priceHistory.priceHistory.nodes;
       priceHistory.reverse()
 
