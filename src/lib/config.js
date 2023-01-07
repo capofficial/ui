@@ -25,7 +25,7 @@ export const CHAINDATA = {
 		alchemy: {
 			key: 'testkey',
 			network: 'testnetwork',
-			wsNetwork: 'testwsnetwork'
+			wsNetwork: 'ws://localhost:8545/'
 		},
 		chainlinkSchema: "ethereum-mainnet-arbitrum-1",
 		subgraphUrl: "http://localhost:8000/subgraphs/name/cap-subgraph",

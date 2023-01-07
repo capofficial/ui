@@ -33,7 +33,6 @@
 		border-bottom: 1px solid var(--layerDark);
 		font-weight: 600;
 		text-transform: uppercase;
-		font-size: 85%;
 	}
 	.data {
 		display: flex;
