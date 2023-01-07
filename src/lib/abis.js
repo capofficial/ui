@@ -1,37 +1,37 @@
 const orderTuple = `tuple(
-	uint256 orderId,
-	address user,
-	string market,
-	uint256 price,
-	bool isLong,
-	bool isReduceOnly,
-	uint8 orderType,
-	uint256 margin,
-	uint256 size,
-	uint256 fee,
-	uint256 timestamp
+    bool isLong,
+    bool isReduceOnly,
+    uint8 orderType,
+    uint72 orderId,
+    address user,
+    string market,
+    uint64 timestamp,
+    uint192 fee,
+    uint256 price,
+    uint256 margin,
+    uint256 size
 )`;
 
 const positionTuple = `tuple(
-	address user,
-	string market,
-	bool isLong,
-	uint256 size,
-	uint256 margin,
-	int256 fundingTracker,
-	uint256 price,
-	uint256 timestamp,
+    bool isLong,
+    uint64 timestamp,
+    address user,
+    string market,
+    int256 fundingTracker,
+    uint256 price,
+    uint256 margin,
+    uint256 size
 )`;
 
 const marketTuple = `tuple(
-	string symbol,
-	address feed,
-	uint256 maxLeverage,
-	uint256 maxOI,
-	uint256 fee,
-	uint256 fundingFactor,
-	uint256 minSize,
-	uint256 minSettlementTime
+    string symbol,
+    address feed,
+    uint16 minSettlementTime,
+    uint16 maxLeverage,
+    uint32 fee,
+    uint32 fundingFactor,
+    uint256 maxOI,
+    uint256 minSize
 )`;
 
 const erc20ABI = [
