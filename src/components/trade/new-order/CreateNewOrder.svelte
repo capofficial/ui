@@ -19,6 +19,14 @@
   console.log($balance)
   onMount(() => {
     _orderType = getUserSetting("orderType");
+    if (!_orderType)
+    {
+      setOrderType('market')
+    }
+    else
+    {
+      setOrderType(_orderType)
+    }
     getUserBalance()
     price.set()
   });
@@ -338,12 +346,16 @@ $: getPriceType($orderType, $selectedMarketInfo)
 		<button class="secondary" on:click|stopPropagation={() => submitOrderType('short')}>Sell/Short</button>
 		<button class="primary" on:click|stopPropagation={() => submitOrderType('long')}>Buy/Long</button>
 	</div>
-  <div class='flex'>
-    <div class='flex container'>
+  <div class='flex containerborders'>
+    <div class='flex container sides'>
       <div class='flex'>Margin</div>
       <div class='flex right'>{formatForDisplay($margin)} {$currencyName}</div>
     </div>
-    <div class='flex container'>
+    <div class='flex container middle borders'>
+      <div class='flex'>MAX SIZE</div>
+      <div class='flex right'>{formatForDisplay($maxSize)}</div>
+    </div>
+    <div class='flex container sides'>
       <div class='flex'>{$selectedMarketInfo.fee ? `Fee (${(100 * $selectedMarketInfo.fee) / BPS_DIVIDER}%)` : 'Fee (---)'}</div>
       <div class='flex right'>{$selectedMarketInfo.fee ? `${formatForDisplay($size * ($selectedMarketInfo.fee / BPS_DIVIDER))} ${$currencyName}` : `0 ${$currencyName}`}</div>
     </div>
@@ -414,7 +426,7 @@ $: getPriceType($orderType, $selectedMarketInfo)
 		display: flex;
     justify-content: space-around;
 		align-items: center;
-		margin: 0 10px;
+		margin: -5px 6px 5px 6px;
 	}
 	button {
 		flex: 50%;
@@ -425,16 +437,41 @@ $: getPriceType($orderType, $selectedMarketInfo)
   .flex {
     display: flex;
     justify-content: space-between;
-    flex: 1;
     text-transform: uppercase;
     font-size: 14px;
+  }
+  .flex.containerborders {
+    margin-bottom: -2px;
+    border-top-style: solid;
+    border-top-width: 1px;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    border-color: var(--layerDark);
   }
   .flex.container {
     padding: 10px;
   }
   .flex.right {
-    display: block;
-    text-align: right;
+    display: flex;
+    justify-self: end;
+    overflow: hidden;
+    flex-grow: 0;
+  }
+  .flex.container.sides {
+    flex-basis: 35%;
+    max-width: 35%;
+  }
+  .flex.container.middle {
+    flex-basis: 25%;
+    max-width: 25%;
+  }
+
+  .flex.container.middle.borders {
+    border-left-style: solid;
+    border-left-width: 1px;
+    border-right-style: solid;
+    border-right-width: 1px;
+    border-color: var(--layerDark);
   }
 
 
