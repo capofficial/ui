@@ -11,6 +11,7 @@
 	import ChainSelect from '../modals/ChainSelect.svelte'
 	import TriggerPrice from '../modals/TriggerPrice.svelte'
 	import TPSL from '../modals/TPSL.svelte'
+	import Markets from '../modals/Markets.svelte'
 
 </script>
 
@@ -52,4 +53,8 @@
 
 {#if $activeModal && $activeModal.name == 'TPSL'}
 <TPSL />
+{/if}
+
+{#if $activeModal && $activeModal.name == 'Markets'}
+<Markets />
 {/if}

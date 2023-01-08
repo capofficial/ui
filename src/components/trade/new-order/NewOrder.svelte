@@ -32,12 +32,13 @@
   $: fetchFundingData($selectedMarketInfo.symbol)
 
 </script>
-
+<!-- svelte-ignore a11y-click-events-have-key-events -->
+<!-- svelte-ignore a11y-missing-attribute -->
 <div class="new-order">
   <div class="header">
     <div class="selected-market">
-      {$selectedMarketInfo.symbol}
-      <!-- svelte-ignore a11y-click-events-have-key-events -->
+      <a on:click|stopPropagation={() =>
+          showModal("Markets")}>{$selectedMarketInfo.symbol}</a>
       <div
         class="info-icon"
         on:click|stopPropagation={() =>
