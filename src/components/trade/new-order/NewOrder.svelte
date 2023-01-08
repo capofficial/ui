@@ -46,6 +46,8 @@
         {@html INFO_ICON_CIRCLE}
       </div>
     </div>
+    
+    <div class="price">{$selectedMarketInfo.price}</div>
     <div class='funding'>
       <div class='funding-label'>
         Funding
@@ -58,7 +60,6 @@
       {/if}
       </div>
     </div>
-    <div class="price">{$selectedMarketInfo.price}</div>
   </div>
   <div class="chart">
     <div id="chart">
@@ -87,8 +88,7 @@
     display: flex;
   }
   .funding {
-    flex-grow: 1;
-    margin-left: 16px;
+    
   }
   .funding-label {
     opacity: 0.5;
@@ -96,6 +96,8 @@
   }
   .price {
     font-size: 14px;
+    flex-grow: 1;
+    margin-left: 16px;
   }
   .info-icon {
     display: flex;

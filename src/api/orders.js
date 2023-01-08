@@ -12,6 +12,20 @@ export async function getUserOrders() {
 	orders.set([...await contract.getUserOrders(_address)].reverse());
 }
 
+export async function executeOrders() {
+	const contract = getContract({name: 'Trade', hasSigner: true});
+	try {
+		let tx = await contract.executeOrders();
+		let receipt = await tx.wait();
+		if (receipt && receipt.status == 1) {
+			showToast('Orders executed.');
+			getUserOrders();
+		}
+	} catch(e) {
+		showError(e);
+	}
+}
+
 export function orderSubmitted() {}
 export function closeOrderSubmitted() {}
 

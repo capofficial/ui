@@ -17,13 +17,9 @@
   import { getUserHistory } from '@api/history'
   import { showModal } from "@lib/ui";
 
+  export let allColumns;
 
-  let columns = [
-      {key: 'market', gridTemplate: '1.5fr', sortable: true},
-      {key: 'isLong', gridTemplate: '1.5fr', sortable: true},
-      {key: 'price', gridTemplate: '1.5fr', sortable: true},
-      {key: 'pnl', gridTemplate: '1fr', sortable: true},
-    ]
+  let columns = allColumns;
 
   let history = []
 

@@ -20,6 +20,7 @@ import Orders from './Orders.svelte'
 import Positions from './Positions.svelte'
 
 import { positions, orders } from '@lib/stores'
+import { executeOrders } from '@api/orders'
 
 let allColumns = {
 		orders: [
@@ -45,6 +46,12 @@ let allColumns = {
 			//{key: 'fundingTracker', gridTemplate: '1fr', sortable: true},
 			{key: 'tools', gridTemplate: '75px', sortable: false, permanent: true}
 		],
+		history: [
+	      {key: 'market', gridTemplate: '1.5fr', sortable: true},
+	      {key: 'isLong', gridTemplate: '1.5fr', sortable: true},
+	      {key: 'price', gridTemplate: '1.5fr', sortable: true},
+	      {key: 'pnl', gridTemplate: '1fr', sortable: true},
+	    ]
 	}
 
 let panel = 'positions'
@@ -53,38 +60,17 @@ let panel = 'positions'
 </script>
 
 <style>
-	.grid {
-		display: grid;
-		grid-template-rows: auto auto;
-		grid-template-columns: repeat(3, 1fr);
-		grid-template-areas: 
-			"positions-orders positions-orders history"
-			"positions-orders positions-orders history";
-		grid-gap: 1px;
-		background-color: var(--layerDark);
-		max-width: 1280px;
-		height: 312px;
-		margin: 0px auto;
-	}
-
-	.positions-orders {
-		grid-area: positions-orders;
-		height: 251px;
-	}
 
 	.positions {
-		grid-area: positions;
 		height: 251px;
 		background-color: var(--layer50);
 	}
 	.orders {
-		grid-area: orders;
 		height: 251px;
 		background-color: var(--layer50);
 	}
 
 	.history {
-		grid-area: history;
 		height: 312px;
 		background-color: var(--layer50);
 	}
@@ -119,17 +105,14 @@ let panel = 'positions'
 
 </style>
 
-<div class='grid'>
-	<div class='positions-orders'>
-		<div class='nav'>
-			<a class:active={panel == 'positions'} on:click={() => {panel = 'positions'}}>Positions {#if $positions.length > 0}<span>({$positions.length})</span>{/if}</a>
-			<a class:active={panel == 'orders'} on:click={() => {panel = 'orders'}}>Orders {#if $orders.length > 0}<span>({$orders.length})</span>{/if}</a>
-		</div>
-		{#if panel == 'positions'}<div class='positions'><Positions allColumns={allColumns['positions']}/></div>{/if}
-		{#if panel == 'orders'}<div class='orders'><Orders allColumns={allColumns['orders']}/></div>{/if}
-	</div>		
-	<div class='history'>
-		<div class='nav'>History</div>
-		<History />
+<div>
+	<div class='nav'>
+		<a class:active={panel == 'positions'} on:click={() => {panel = 'positions'}}>Positions {#if $positions.length > 0}<span>({$positions.length})</span>{/if}</a>
+		<a class:active={panel == 'orders'} on:click={() => {panel = 'orders'}}>Orders {#if $orders.length > 0}<span>({$orders.length})</span>{/if}</a>
+		<a class:active={panel == 'history'} on:click={() => {panel = 'history'}}>History</a>
+		<a on:click={executeOrders}>exec orders</a>
 	</div>
+	{#if panel == 'positions'}<div class='positions'><Positions allColumns={allColumns['positions']}/></div>{/if}
+	{#if panel == 'orders'}<div class='orders'><Orders allColumns={allColumns['orders']}/></div>{/if}
+	{#if panel == 'history'}<div class='history'><History allColumns={allColumns['history']}/></div>{/if}
 </div>

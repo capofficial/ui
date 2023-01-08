@@ -158,6 +158,7 @@ export const ABIS = {
 		`function cancelOrder(uint256)`,
 		`function cancelOrders(uint256[] calldata)`,
 		`function closePositionWithoutProfit(string memory)`,
+		`function executeOrders()`,
 
 		`function getUpl(address) view returns(int256)`,
 		`function getUserPositionsWithUpls(address) view returns (${positionTuple}[], int256[])`,

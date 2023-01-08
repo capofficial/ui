@@ -9,6 +9,8 @@
 	import EditOrder from '../modals/EditOrder.svelte'
 	import HistoryDetails from '../modals/HistoryDetails.svelte'
 	import ChainSelect from '../modals/ChainSelect.svelte'
+	import TriggerPrice from '../modals/TriggerPrice.svelte'
+	import TPSL from '../modals/TPSL.svelte'
 
 </script>
 
@@ -42,4 +44,12 @@
 
 {#if $activeModal && $activeModal.name == 'ChainSelect'}
 <ChainSelect />
+{/if}
+
+{#if $activeModal && $activeModal.name == 'TriggerPrice'}
+<TriggerPrice />
+{/if}
+
+{#if $activeModal && $activeModal.name == 'TPSL'}
+<TPSL />
 {/if}

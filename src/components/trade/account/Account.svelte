@@ -37,7 +37,7 @@
 	.data {
 		display: flex;
 		flex-direction: column;
-		row-gap: 5px;
+		row-gap: 10px;
 		padding: 20px;
 	}
 	.row {
@@ -50,7 +50,6 @@
 	}
 	button {
 		flex: 50%;
-		margin: 5px;
 		padding: 10px 5px;
 		width: 75%;
 	}
@@ -58,7 +57,8 @@
 		display: flex;
     	justify-content: space-around;
 		align-items: center;
-		margin: 0 10px;
+		margin: 0 20px;
+		column-gap: 10px;
 	}
 	.gray {
 		background-color: var(--layer200);

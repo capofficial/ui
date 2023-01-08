@@ -131,7 +131,7 @@ $: getChartData($selectedMarketInfo.symbol)
   .chart {
     margin-right: -1px;
     margin-bottom: -1px;
-		min-height: 176px; 
+		min-height: 100px; 
   }
 
 </style>

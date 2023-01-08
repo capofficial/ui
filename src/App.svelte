@@ -38,6 +38,8 @@
 
 		color-scheme: dark;
 
+		--container-width: 800px;
+
 		--base-padding: 20px;
 		--base-radius: 6px;
 		--semi-padding: calc(var(--base-padding)/2);
