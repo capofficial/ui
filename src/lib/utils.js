@@ -3,7 +3,11 @@ import { get } from 'svelte/store'
 import { CHAINDATA } from './config'
 import { chainId } from './stores'
 
-import { ethers } from 'ethers'
+import { ABIS } from './abis' 
+
+import { Contract, ethers } from 'ethers'
+
+import { formatUnits } from './formatters'
 
 export function hashString(_string) {
   var hash = 0,
@@ -56,13 +60,13 @@ export function getChainData(key) {
 
 export async function getBlock(blockNumber) {
 	if (!blockNumber) return;
-	let _provider = new ethers.providers.JsonRpcProvider(CHAINDATA[42161].rpc);
+	let _provider = new ethers.providers.JsonRpcProvider(CHAINDATA[42161].rpc); //TESTING ONLY, must make chainId dynamic in final release
 	let block = await _provider.getBlock(blockNumber);
 	return block;
 }
 
 export async function getLatestBlock() {
-	let _provider = new ethers.providers.JsonRpcProvider(CHAINDATA[42161].rpc);
+	let _provider = new ethers.providers.JsonRpcProvider(CHAINDATA[42161].rpc); //TESTING ONLY, must make chainId dynamic in final release
 	let latestBlock = await _provider.getBlock("latest");
 	return latestBlock;
 }
@@ -79,4 +83,13 @@ export function getUPL(position, latestPrice) {
 		}
 	}
 	return upl;
+}
+
+export async function getCurrencyInUserWallet(address) {
+	let _chainId = get(chainId);
+	let _provider = new ethers.providers.JsonRpcProvider(CHAINDATA[_chainId].rpc);
+	let currencyContract = new Contract(CHAINDATA[_chainId]['currencyAddress'], ABIS['ERC20'], _provider)
+	let userBalance = await currencyContract.balanceOf(address)
+	userBalance = formatUnits(userBalance, CHAINDATA[_chainId]['currencyDecimals'])
+	return userBalance;
 }
