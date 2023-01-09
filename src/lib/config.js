@@ -15,12 +15,12 @@ export const CHAINDATA = {
 		explorer: 'http://localhost:8545',
 		rpc: 'http://127.0.0.1:8545/',
 		currencyName: 'USDC',
-		currencyAddress: '0x5FbDB2315678afecb367f032d93F642f64180aa3', // USDC address
+		currencyAddress: '0xa85233C63b9Ee964Add6F2cffe00Fd84eb32338f', // USDC address
 		currencyDecimals: 6, // USDC
 		contracts: {
-			Trade: '0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9',
-			Pool: '0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9',
-			Store: '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0',
+			Trade: '0x09635F643e140090A9A8Dcd712eD6285858ceBef',
+			Pool: '0xc5a5C42992dECbae36851359345FE25997F5C42d',
+			Store: '0x7a2088a1bFc9d81c55368AE168C2C02570cB814F',
 		},
 		alchemy: {
 			key: 'testkey',

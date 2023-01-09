@@ -46,7 +46,7 @@
   <div class="header">
     <div class="selected-market">
       <a on:click|stopPropagation={() => showModal("Markets")} class='market-button'>
-        <div>{$selectedMarketInfo.symbol}</div> 
+        <div>{$selectedMarketInfo.symbol} <span class='leverage'>{$selectedMarketInfo.maxLeverage}x</span></div> 
         <div class='down-caret'>▼</div>
       </a>
     </div>
@@ -115,6 +115,13 @@
     border-left: 1px;
     border-left-style: solid;
     border-left-color: var(--layerDark);
+  }
+  .leverage {
+    margin-left: 6px;
+    background-color: var(--layer200);
+    padding: 3px 4px;
+    border-radius: 3px;
+    font-size: 80%;
   }
   .info-icon {
     display: flex;
