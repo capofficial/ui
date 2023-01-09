@@ -19,6 +19,7 @@
   });
 
   function submitOrderType(type) {
+    if ($size == 0) return;
     isLong.set(type === 'short' ? false : true)
     submitOrder(
       {

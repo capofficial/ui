@@ -57,15 +57,15 @@
     <div class='add-remove-wrapper'>
         <div class='add-remove-title'>Add Liquidity</div>
         <div class='add-remove-desc'>Deposit to earn a portion of trader losses and fees based on your share of the pool.</div>
-        <Input label='Deposit' bind:value={depositAmount}></Input>
-        <button class='primary button gray' on:click|stopPropagation={() => {addLiquidity(parseUnits(depositAmount, 6))}}>Add Liquidity</button>
+        <Input label='Amount (USDC)' bind:value={depositAmount}></Input>
+        <button class='primary button' on:click|stopPropagation={() => {addLiquidity(parseUnits(depositAmount, 6))}}>Add Liquidity</button>
         <div class='add-remove-desc'>There are no deposit fees.</div>
     </div>
     <div class='add-remove-wrapper'>
         <div class='add-remove-title'>Remove Liquidity</div>
         <div class='add-remove-desc'>You can withdraw at any time with no cooldown period.</div>
-        <Input label='Withdraw' bind:value={withdrawAmount}></Input>
-        <button class='primary button gray' on:click|stopPropagation={() => {removeLiquidity(parseUnits(withdrawAmount, 6))}}>Remove Liquidity</button>
+        <Input label='Amount (USDC)' bind:value={withdrawAmount}></Input>
+        <button class='primary button' on:click|stopPropagation={() => {removeLiquidity(parseUnits(withdrawAmount, 6))}}>Remove Liquidity</button>
         <div class='add-remove-desc'>{$poolWithdrawalFee ? `Withdrawal Fee: ${(100 * $poolWithdrawalFee)}%` : `Withdrawal Fee: ---`}</div>
     </div>
 </div>

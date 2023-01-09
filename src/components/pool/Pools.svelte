@@ -35,7 +35,7 @@
             Pool Balance
         </div>
         <div class='balance-amount'>
-            {formatForDisplay($poolBalance)}
+            ${formatForDisplay($poolBalance)}
         </div>
     </div>
     <div class='balance-wrapper'>
@@ -43,7 +43,7 @@
             Buffer Balance
         </div>
         <div class='balance-amount'>
-            {formatForDisplay($bufferBalance)}
+            ${formatForDisplay($bufferBalance)}
         </div>
     </div>
     <div class='balance-wrapper'>
@@ -52,9 +52,9 @@
         </div>
         <div class='balance-amount'>
             {#if $userPoolBalance == null}
-                0
+                $0
             {:else}
-                {formatForDisplay($userPoolBalance)}
+                ${formatForDisplay($userPoolBalance)}
             {/if}
         </div>
     </div>
