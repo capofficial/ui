@@ -116,7 +116,7 @@ function setFirstLoad() {
   {
     currentSymbol = $selectedMarketInfo.symbol
   }
-  
+
   if (currentSymbol !== $selectedMarketInfo.symbol)
   {
     firstLoad = true
@@ -126,7 +126,6 @@ function setFirstLoad() {
 
 $: getChartData($selectedMarketInfo.symbol)
 $: setFirstLoad($selectedMarketInfo.symbol)
-$: console.log("spinner data", firstLoad, $selectedMarketInfo.symbol, currentSymbol)
 
 </script>
 
