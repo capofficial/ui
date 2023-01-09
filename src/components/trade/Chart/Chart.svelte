@@ -4,6 +4,7 @@
   import { formatUnits } from '@lib/formatters';
   import { getLatestBlock } from '@lib/utils';
   import { selectedMarketInfo } from "@lib/stores"
+  import { LOADING_ICON } from '@lib/icons'
 
   import { CHAINLINK_CONTRACT_ADDRESSES } from '@lib/config'
 
@@ -13,10 +14,12 @@
   let areaSeries
   let currentSymbol
   let lastChartUpdateTimestamp = 0
+  let firstLoad
 
 	onMount(async () => {
 
-    
+    firstLoad = true
+
     chart = createChart(document.getElementById('lightweight-graph'),
     {
       layout: {
@@ -97,7 +100,9 @@ async function getChartData() {
         currentSymbol = $selectedMarketInfo.symbol
         lastChartUpdateTimestamp = Date.now() / 1000
 
-    }
+      }
+    
+    firstLoad = false
 
     } catch (err) {
     console.log(err);
@@ -105,7 +110,17 @@ async function getChartData() {
   }
 }
 
+function setFirstLoad() {
+
+  if (currentSymbol !== $selectedMarketInfo.symbol)
+  {
+    firstLoad = true
+  }
+
+}
+
 $: getChartData($selectedMarketInfo.symbol)
+$: setFirstLoad($selectedMarketInfo.symbol)
 
 </script>
 
@@ -125,13 +140,33 @@ $: getChartData($selectedMarketInfo.symbol)
 	</linearGradient>
 </svg> -->
 
-<div class='chart' id='lightweight-graph'></div>
-
+<div class={firstLoad ? 'loading' : 'spinner-hidden'}>
+  <span class='spinner'>{@html LOADING_ICON}</span>
+</div>
+<div class={firstLoad ? 'chart-hidden' : 'chart'} id='lightweight-graph'></div>
 <style>
   .chart {
     margin-right: -1px;
     margin-bottom: 0px;
 		min-height: 100px;
+  }
+  .chart-hidden {
+    height: 0px;
+		visibility: collapse;
+  }
+  .spinner-hidden {
+    visibility: hidden;
+    height: 0px;
+  }
+  .spinner {
+    width: 42px;
+  }
+  .loading {
+		min-height: 100px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
   }
 
 </style>
