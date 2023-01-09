@@ -48,10 +48,10 @@
       </div>
       <div class="trigger-tpsl right">
         <a on:click|stopPropagation={() => showModal('TriggerPrice')}>
-          {#if $orderType == 0}
+          {#if $orderType == 0 || $price == 0}
             +Trigger Price
           {:else}
-            {`Trigger: ${$price ? $price : `0`}`}
+            {`Trigger: ${$price}`}
           {/if}
         </a>
         <a on:click|stopPropagation={() => showModal('TPSL')}>

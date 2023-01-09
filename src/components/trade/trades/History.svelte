@@ -111,7 +111,7 @@ $: fetchData($address);
   }
 
   .history-section {
-      height: 251px;
+      max-height: 251px;
   }
 
   a {

@@ -41,6 +41,5 @@
 <div class='nav'>
 	<a class:active={$pageName == 'Trade'} href='/trade'>Trade</a>
 	<a class:active={$pageName == 'Pool'} href='/pool'>Pool</a>
-	<a href='/docs'>Docs</a>
 </div>
 

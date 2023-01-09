@@ -47,7 +47,7 @@
 
 </style>
 
-<Modal title={$orderType == 0 ? 'Select Order Type' : 'Set Trigger Price'} width={280}>
+<Modal title={'Set Trigger Price'} width={280}>
 	
 	<div class='container'>
 		<!-- svelte-ignore a11y-click-events-have-key-events -->

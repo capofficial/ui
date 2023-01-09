@@ -19,7 +19,8 @@ import History from './History.svelte'
 import Orders from './Orders.svelte'
 import Positions from './Positions.svelte'
 
-import { positions, orders } from '@lib/stores'
+import { positions, orders, address } from '@lib/stores'
+  import { getUserOrders } from '@api/orders'
 
 let allColumns = {
 		orders: [
@@ -53,24 +54,30 @@ let allColumns = {
 	    ]
 	}
 
-let panel = 'positions'
+	let panel = 'positions'
 
+	function _getOrders(addr) {
+		if (!addr) return;
+		getUserOrders();
+	}
+
+	$: _getOrders($address); // to show orders count
 
 </script>
 
 <style>
 
 	.positions {
-		height: 251px;
+		max-height: 251px;
 		background-color: var(--layer50);
 	}
 	.orders {
-		height: 251px;
+		max-height: 251px;
 		background-color: var(--layer50);
 	}
 
 	.history {
-		height: 312px;
+		max-height: 312px;
 		background-color: var(--layer50);
 	}
 
@@ -82,9 +89,8 @@ let panel = 'positions'
 		background-color: var(--layer50);
 		border-bottom: 1px solid var(--layerDark);
 		font-weight: 600;
-		text-transform: uppercase;
 		justify-content: baseline;
-		gap: 8px;
+		gap: 20px;
 	}
 
 	.nav a {

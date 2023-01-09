@@ -6,6 +6,7 @@
   import CreateNewOrder from "./CreateNewOrder.svelte";
   import { getFundingRate } from '@api/markets';
   import { formatForDisplay } from '@lib/formatters'
+  import { setPageTitle } from '@lib/ui'
   /* TODO
 	- For a boilerplate, see Account.svelte
 	- Should have a header with the the selectedMarket and latest price (spaced between), as well as the funding rate
@@ -31,6 +32,13 @@
 	}
   $: fetchFundingData($selectedMarketInfo.symbol)
 
+  function setPriceInTitle(marketInfo) {
+    if (!marketInfo) return;
+    setPageTitle(`${marketInfo.price} ${marketInfo.symbol}`);
+  }
+
+  $: setPriceInTitle($selectedMarketInfo)
+
 </script>
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-missing-attribute -->
@@ -50,7 +58,7 @@
     </div>
     <div class='funding'>
       <div class='funding-label'>
-        Funding
+        Funding 1h
       </div>
       <div>
       {#if $fundingRate > 0}
@@ -79,7 +87,6 @@
     padding: 0 20px;
     border-bottom: 1px solid var(--layerDark);
     font-weight: 600;
-    text-transform: uppercase;
     font-size: 85%;
     justify-content: space-between;
   }
@@ -98,6 +105,7 @@
   .funding-label {
     opacity: 0.5;
     font-weight: 400;
+    margin-bottom: 3px;
   }
   .price {
     font-size: 16px;

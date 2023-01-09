@@ -1,5 +1,6 @@
 import { get } from 'svelte/store'
 
+import Home from '@components/home/Home.svelte'
 import Trade from '@components/trade/Trade.svelte'
 import Pool from '@components/pool/Pool.svelte'
 
@@ -8,9 +9,13 @@ import { setPageTitle } from './ui'
 import { saveUserSetting } from './utils'
 
 const PAGES = {
+	'Home': {
+		component: Home,
+		paths: ['']
+	},
 	'Trade': {
 		component: Trade,
-		paths: ['', 'trade']
+		paths: ['trade']
 	},
 	'Pool': {
 		component: Pool,
@@ -41,7 +46,7 @@ export function loadRoute(path) {
 			setPageTitle(page);
 			pageName.set(page);
 
-			if (primaryPath == 'trade' || primaryPath == '') {
+			if (primaryPath == 'trade') {
 				if (secondaryPath) {
 					// secondaryPath is a market id, load it
 					setMarket(secondaryPath);

@@ -1,5 +1,13 @@
 <script>
 
+	/* TODOS
+	ok - home page
+	ok - set page title on routing and price change
+	ok - fix console error
+	ok - markets modal height
+	ok - show orders count on first load
+	*/
+
 	import { onMount } from 'svelte'
 
 	import Modals from '@components/layout/Modals.svelte'
@@ -8,7 +16,7 @@
 	import Header from '@components/header/Header.svelte'
 
 	import { loadRoute, catchLinks, navigateTo } from '@lib/routing'
-	import { component, address } from '@lib/stores'
+	import { component, address, pageName } from '@lib/stores'
 	import { hidePopoversOnKeydown, hidePopoversOnClick } from '@lib/ui'
 	import { runAndInterval } from '@lib/utils'
 
@@ -214,9 +222,12 @@
 
 <svelte:window on:keydown={hidePopoversOnKeydown} on:click={hidePopoversOnClick} />
 
+{#if $pageName != 'Home'}
+
 <Errors />
 <Modals />
 <Toasts />
 <Header />
+{/if}
 
 <svelte:component this={$component}/>

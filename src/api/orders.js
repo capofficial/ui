@@ -56,6 +56,7 @@ export async function submitOrder(params) {
 	price = parseUnits(price, 18);
 
 	if (orderType == 0) price = parseUnits(0, 18);
+	if (price == 0) orderType = 0;
 	if (isReduceOnly) margin = parseUnits(0);
 
 	tpPrice = hasTPSL ? parseUnits(tpPrice, 18) : 0;

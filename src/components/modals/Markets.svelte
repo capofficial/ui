@@ -53,7 +53,7 @@
 		overflow-y: auto;
 		scrollbar-color: var(--layer200);
 		scrollbar-width: thin;
-		height: 450px;
+		max-height: 450px;
 	}
 	.simpletable::-webkit-scrollbar-track {
 		background-color: transparent;

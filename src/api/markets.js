@@ -20,8 +20,10 @@ export async function getMarketsWithPrices() {
 }
 
 export async function getFundingRate(market) {
+	if (!market) return;
 	const contract = getContract({name: 'Trade'});
-	fundingRate.set(formatUnits(await contract.getAccruedFunding(market, 1), 18) / BPS_DIVIDER);
+	const accruedFunding = await contract.getAccruedFunding(market, 1);
+	fundingRate.set(formatUnits(accruedFunding, 18) / BPS_DIVIDER);
 }
 
 export async function getOI(market) {
