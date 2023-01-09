@@ -176,6 +176,7 @@ export async function closePosition(params) {
 		if (receipt && receipt.status == 1) {
 			showToast('Reduce Order submitted.');
 			getUserOrders();
+			return true;
 		}
 
 	} catch(e) {

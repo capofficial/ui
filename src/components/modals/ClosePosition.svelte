@@ -12,11 +12,11 @@
 	import Button from '@components/layout/Button.svelte'
 	import LabelValue from '@components/layout/LabelValue.svelte'
 
-	import { formatPnl, formatUnits, formatForDisplay, formatPositionNew } from '@lib/formatters'
+	import {formatForDisplay, formatPositionNew } from '@lib/formatters'
 	import { focusInput, hideModal } from '@lib/ui'
 	import { BPS_DIVIDER } from '@lib/config'
 
-	import { markets } from '@lib/stores'
+	import { markets, currencyName } from '@lib/stores'
 	import { get } from 'svelte/store'
 	import { getUPL } from '@lib/utils'
 
@@ -102,7 +102,7 @@
 	let totalFee = 0
 	function calculateFee() {
 		feePercent = _markets[_position.market].fee / BPS_DIVIDER
-		totalFee = (_position.margin * (sizeToClosePercent / 100)) * feePercent  
+		totalFee = (_position.margin * sizeToClosePercent) * feePercent  
 	}
 
 	$: calculateFee(amount, stopType);
@@ -146,6 +146,7 @@
 
 		const success = await closePosition(params);
 		isSubmitting = false;
+		if (success) hideModal();
 	}
 
 	function validateTPSL() {
@@ -412,24 +413,24 @@
 			</div>
 
 			<div class='row'>
-				<LabelValue label='Max' value={`${_position.size}`} on:click={() => amount = _position.size} isClickable={true} />
+				<LabelValue label='Max' value={`${_position.size} ${$currencyName}`} on:click={() => amount = _position.size} isClickable={true} />
 			</div>
 
 			<div class='row'>
-				<LabelValue label='P/L (approx)' value={formatForDisplay(estimatedPnl)}/>
+				<LabelValue label='P/L (approx)' value={`${formatForDisplay(estimatedPnl)} ${$currencyName}`}/>
 			</div>
 
 			<div class='row'>
-				<LabelValue label='Size to Close (%)' value={formatForDisplay(sizeToClosePercent)}/>
+				<LabelValue label='Size to Close (%)' value={`${formatForDisplay(sizeToClosePercent)}%`}/>
 			</div>
 
 			
 			<div class='row'>
-				<LabelValue label='Remaining Margin' value={formatForDisplay(remainingMargin)}/>
+				<LabelValue label='Remaining Margin' value={`${formatForDisplay(remainingMargin)} ${$currencyName}`}/>
 			</div>
 
 			<div class='row bottom-spacing'>
-				<LabelValue label='Fee' value={formatForDisplay(totalFee)}/>
+				<LabelValue label='Fee' value={`${formatForDisplay(totalFee)} ${$currencyName}`}/>
 			</div>
 
 			<div class='stop-type bottom-spacing'>
