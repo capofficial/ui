@@ -35,25 +35,29 @@ $: fetchData($address)
 		grid-template-areas: 
 			"header header header header"
 			"pools transactions transactions transactions";
-		grid-gap: 1px;
+		grid-gap: 0px;
 		background-color: var(--layerDark);
-		max-width: 850px;
+		max-width: var(--container-width);
 		margin: 0 auto;
-		margin-top: 25px;
-		border: 1px solid var(--layerDark);
 	}
 
 	.pools {
 		grid-area: pools;
 		background-color: var(--layer50);
+		border: 1px solid var(--layerDark);
+		border-top: 0px;
+		border-right: 0px;
 	}
 	.transactions {
 		grid-area: transactions;
 		background-color: var(--layer50);
+		border: 1px solid var(--layerDark);
+		border-top: 0px;
 	}
 	.header {
 		grid-area: header;
 		background-color: var(--layer50);
+		border: 1px solid var(--layerDark);
 		height: 60px;
 		padding: 0 20px;
 		display: flex;
@@ -62,14 +66,15 @@ $: fetchData($address)
 	}
 	.title {
 		font-weight: 600;
-		font-size: 20px;
+		font-size: 16px;
 		align-self: center;
 		text-transform: uppercase;
 	}
 	.subtitle {
 		color: var(--text300);
+		font-size: 14px;
 		align-self: center;
-		margin-top: 3px;
+		margin-top: 2px;
 	}
 
 </style>
