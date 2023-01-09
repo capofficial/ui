@@ -57,12 +57,6 @@
 	section {
 	  margin-bottom: 64px;
 	}
-	section.dark {
-	  background-color: #111;
-	  color: #fff;
-	  padding: 20px 30px;
-	  border-radius: 12px;
-	}
 
 	p, li {
 	  line-height: 1.618;
@@ -88,7 +82,7 @@
 	}
 
 	footer {
-	  border-top: 1px solid #ddd;
+	  border-top: 1px solid #555;
 	  padding: 24px 0;
 	}
 
@@ -104,7 +98,7 @@
   	<div class='logo'>
   		<img src='im/logo-full.svg'>
   	</div>
-  	<h1>Fully Decentralized Crypto Perpetuals</h1>
+  	<h1>Fully Decentralized Perpetuals Exchange</h1>
   </header>
 
   <div class='body'>
@@ -113,7 +107,7 @@
 
   		<h2>Hello!</h2>
 
-  		<p>CAP lets you trade markets such as BTC/USD and ETH/USD with leverage. It is decentralized, open source and accessible to everyone.</p>
+  		<p>CAP lets you trade crypto markets like BTC/USD and ETH/USD with leverage. It is decentralized, open source, and accessible to everyone.</p>
 
   		<p>Over <strong>$5,000,000,000</strong> has already been traded on CAP! Get started in seconds.</p>
 
@@ -153,6 +147,8 @@
   			<li>10% go to keepers which trigger order executions (anyone can be a keeper).</li>
   		</ul>
 
+  		<p>Your account is liquidated when its margin level reaches 20%.</p>
+
   		<p>All prices are provided in real-time on-chain by Chainlink.</p>
 
   	</section>
@@ -161,7 +157,7 @@
 
   		<h2>Audits</h2>
 
-  		<p></p>
+  		<p>Coming soon!</p>
 
   	</section>
 

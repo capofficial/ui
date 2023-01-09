@@ -4,6 +4,8 @@
 	import { formatForDisplay } from '@lib/formatters'
 	import { address, balance, upl, equity, lockedMargin, freeMargin, marginLevel } from '@lib/stores'
 
+	import tooltip from '@lib/tooltip'
+
 	import { showModal } from '@lib/ui'
 	import { getUserBalance, getUserLockedMargin, getUserUpl } from '@api/account'
 
@@ -85,27 +87,27 @@
 	<div class="header">Account</div>
 	<div class="data">
 		<div class="row">
-			<div class="label">Balance</div>
+			<div class="label" use:tooltip={{content: 'Equals Deposits - Withdrawals + Profits or Losses.'}}>Balance</div>
 			<div class="value">${formatForDisplay($balance)}</div>
 		</div>
 		<div class="row">
-			<div class="label">UP/L</div>
+			<div class="label" use:tooltip={{content: 'Unrealized profit / loss incurred by open positions.'}}>UP/L</div>
 			<div class="value">${formatForDisplay($upl)}</div>
 		</div>
 		<div class="row">
-			<div class="label">Equity</div>
+			<div class="label" use:tooltip={{content: 'Equals Balance + UP/L.'}}>Equity</div>
 			<div class="value">${formatForDisplay($equity)}</div>
 		</div>
 		<div class="row">
-			<div class="label">Locked Margin</div>
+			<div class="label" use:tooltip={{content: 'Margin currently locked in open positions.'}}>Locked Margin</div>
 			<div class="value">${formatForDisplay($lockedMargin)}</div>
 		</div>
 		<div class="row">
-			<div class="label">Free Margin</div>
+			<div class="label" use:tooltip={{content: 'Margin available to open new positions, equal to Equity - Locked Margin.'}}>Free Margin</div>
 			<div class="value">${formatForDisplay($freeMargin)}</div>
 		</div>
 		<div class="row">
-			<div class="label">Margin Level</div>
+			<div class="label" use:tooltip={{content: 'Equals Equity / Locked Margin. When < 100%, you can no longer open new positions. When < 20%, your account is liquidated.'}}>Margin Level</div>
 			<div class="value">{$marginLevel == Infinity ? "∞" : `${formatForDisplay($marginLevel)}%`}</div>
 		</div>
 	</div>

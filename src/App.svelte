@@ -6,6 +6,7 @@
 	ok - fix console error
 	ok - markets modal height
 	ok - show orders count on first load
+	ok - add account tooltips
 	*/
 
 	import { onMount } from 'svelte'
