@@ -89,7 +89,6 @@
   }
 
   .input-wrapper {
-    height: 100%;
     width: 100%;
     box-sizing: border-box;
     border-radius: 6px;

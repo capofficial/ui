@@ -70,7 +70,6 @@
 			{:else}
 			<Button isLoading={isSubmitting} label={`Deposit ${$currencyName}`} />
 			{/if}
-			
 		</div>
 
 	</form>

@@ -81,6 +81,7 @@ export async function submitOrder(params) {
 		if (receipt && receipt.status == 1) {
 			showToast('Order submitted.');
 			getUserOrders();
+			return true;
 		}
 
 	} catch(e) {

@@ -1,8 +1,9 @@
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <script>
   import { onMount } from "svelte";
-  import Input from "../../layout/Input.svelte";
-  import Slider from "../../layout/Slider.svelte";
+  import Button from "@components/layout/Button.svelte";
+  import Input from "@components/layout/Input.svelte";
+  import Slider from "@components/layout/Slider.svelte";
 	import { getUserBalance } from '@api/account'
   import { selectedMarketInfo } from '@lib/stores'
   import { BPS_DIVIDER } from '@lib/config'
@@ -11,17 +12,23 @@
   import { formatForDisplay } from '@lib/formatters'
   import { showModal } from '@lib/ui'
 
-  let sizeHighlighted;
+  let sellLoading, buyLoading;
 
   onMount(() => {
     getUserBalance()
     price.set()
   });
 
-  function submitOrderType(type) {
+  async function submitOrderType(type) {
     if ($size == 0) return;
-    isLong.set(type === 'short' ? false : true)
-    submitOrder(
+    if (type == 'short') {
+      isLong.set(false);
+      sellLoading = true;
+    } else {
+      isLong.set(true);
+      buyLoading = true;
+    }
+    const success = await submitOrder(
       {
         market: $selectedMarket,
         isLong: $isLong,
@@ -34,7 +41,19 @@
         tpPrice: $tpPrice,
         slPrice: $slPrice
       }
-    )
+    );
+    if (success) {
+      // reset form
+      margin.set();
+      size.set()
+      price.set()
+      isReduceOnly.set(false)
+      orderType.set(0)
+      tpPrice.set()
+      slPrice.set()
+    }
+    sellLoading = false;
+    buyLoading = false;
   }
   
 </script>
@@ -68,8 +87,8 @@
       <Input label={'Size'} bind:value={$size} />
     </div>
     <div class='buttons'>
-      <button class="secondary" on:click|stopPropagation={() => submitOrderType('short')}>Sell/Short</button>
-      <button class="primary" on:click|stopPropagation={() => submitOrderType('long')}>Buy/Long</button>
+        <Button isRed={true} isLoading={sellLoading} on:click={() => submitOrderType('short')} label="Sell/Short" />
+        <Button isLoading={buyLoading} on:click={() => submitOrderType('long')} label="Buy/Long" />
     </div>
   </div>
   <div class='margin-fee-container'>
