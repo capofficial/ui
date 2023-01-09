@@ -14,11 +14,11 @@
   let areaSeries
   let currentSymbol
   let lastChartUpdateTimestamp = 0
-  let firstLoad
+  let loadingChart
 
 	onMount(async () => {
 
-    firstLoad = true
+    loadingChart = true
 
     chart = createChart(document.getElementById('lightweight-graph'),
     {
@@ -55,6 +55,7 @@
 async function getChartData() {
 
   let currentTime = Date.now() / 1000
+  let marketAtStart = $selectedMarketInfo.symbol
 
   if (currentSymbol !== $selectedMarketInfo.symbol || ((currentTime - lastChartUpdateTimestamp) > 180))
   {
@@ -70,10 +71,8 @@ async function getChartData() {
       priceHistory.reverse()
 
       let latestBlock = await getLatestBlock()
-
       let latestBlockNumber = latestBlock.number
       let latestBlockTimestamp = latestBlock.timestamp
-
       let averageBlockTime = 0.4; //2 blocks/s on arbitrum at the moment
 
       areaSeries.setData([])
@@ -81,28 +80,28 @@ async function getChartData() {
       for (let i = 0; i < priceHistory.length; i++)
       {
         let historyBlockNumber = Number(priceHistory[i].blockNumber)
-        
         let blockDiff = latestBlockNumber - historyBlockNumber
-
         let timeDiff = Math.floor(blockDiff * averageBlockTime)
-
         let estimatedHistoryTimestamp = latestBlockTimestamp - timeDiff
-
         let dataPoint = {
           time: estimatedHistoryTimestamp,
           value: Number(formatUnits(priceHistory[i].latestAnswer, 8))
         }
-
         areaSeries.update(dataPoint)
-
         chart.timeScale().fitContent();
+      }
 
+      if (marketAtStart !== $selectedMarketInfo.symbol)
+      {
+        currentSymbol = null
+        getChartData()
+      }
+      else
+      {
         currentSymbol = $selectedMarketInfo.symbol
         lastChartUpdateTimestamp = Date.now() / 1000
-
+        loadingChart = false
       }
-    
-    firstLoad = false
 
     } catch (err) {
     console.log(err);
@@ -110,22 +109,22 @@ async function getChartData() {
   }
 }
 
-function setFirstLoad() {
+function setLoadingChart() {
 
   if (!currentSymbol)
   {
     currentSymbol = $selectedMarketInfo.symbol
   }
-
+  
   if (currentSymbol !== $selectedMarketInfo.symbol)
   {
-    firstLoad = true
+    loadingChart = true
   }
 
 }
 
 $: getChartData($selectedMarketInfo.symbol)
-$: setFirstLoad($selectedMarketInfo.symbol)
+$: setLoadingChart($selectedMarketInfo.symbol)
 
 </script>
 
@@ -145,10 +144,10 @@ $: setFirstLoad($selectedMarketInfo.symbol)
 	</linearGradient>
 </svg> -->
 
-<div class={firstLoad ? 'loading' : 'spinner-hidden'}>
+<div class={loadingChart ? 'loading' : 'spinner-hidden'}>
   <span class='spinner'>{@html LOADING_ICON}</span>
 </div>
-<div class={firstLoad ? 'chart-hidden' : 'chart'} id='lightweight-graph'></div>
+<div class={loadingChart ? 'chart-hidden' : 'chart'} id='lightweight-graph'></div>
 <style>
   .chart {
     margin-right: -1px;
