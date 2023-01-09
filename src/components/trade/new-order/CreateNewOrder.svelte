@@ -94,11 +94,11 @@
   </div>
   <div class='margin-fee-container'>
     <div class='margin'>
-      <div>Margin</div>
+      <div>Margin:</div>
       <div>{formatForDisplay($margin)} {$currencyName}</div>
     </div>
     <div class='fee'>
-      <div>{$selectedMarketInfo.fee ? `Fee (${(100 * $selectedMarketInfo.fee) / BPS_DIVIDER}%)` : 'Fee (---)'}</div>
+      <div>{$selectedMarketInfo.fee ? `Fee (${(100 * $selectedMarketInfo.fee) / BPS_DIVIDER}%)` : 'Fee (---)'}:</div>
       <div>{$selectedMarketInfo.fee ? `${formatForDisplay($size * ($selectedMarketInfo.fee / BPS_DIVIDER))} ${$currencyName}` : `0 ${$currencyName}`}</div>
     </div>
   </div>
@@ -115,7 +115,6 @@
     align-items: center;
     margin-bottom: -10px;
     font-weight: 600;
-    text-transform: uppercase;
     font-size: 85%;
     justify-content: space-between;
   }
@@ -149,21 +148,11 @@
     gap: 10px;
     justify-content: space-around;
 		align-items: center;
-    margin-bottom: 10px;
-	}
-	button {
-		flex: 50%;
-		padding: 10px 5px;
-		width: 75%;
 	}
   .margin-fee-container {
     display: flex;
     justify-content: space-between;
-    text-transform: uppercase;
     font-size: 14px;
-    border-top-style: solid;
-    border-top-width: 1px;
-    border-color: var(--layerDark);
     gap: 10px;
   }
   .fee {

@@ -60,7 +60,7 @@
 		</div>
 
 		<div class='available-currency'>
-			<div>Balance:</div>
+			<div>Wallet Balance:</div>
 			<div class='available-amount'>{`${formatForDisplay(userCurrency)} ${$currencyName}`}</div>
 		</div>
 
