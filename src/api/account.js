@@ -73,7 +73,7 @@ export async function getUserAllowance() {
 }
 
 export async function approveCurrency() {
-	const contract = getContract({name: 'ERC20', address: getChainData('currencyAddress')});
+	const contract = getContract({name: 'ERC20', address: getChainData('currencyAddress'), hasSigner: true});
 	const spenderContract = getContract({name: 'Store'});
 	const spenderAddress = spenderContract.address;
 	try {

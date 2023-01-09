@@ -44,7 +44,6 @@
     );
     if (success) {
       // reset form
-      margin.set();
       size.set()
       price.set()
       isReduceOnly.set(false)
