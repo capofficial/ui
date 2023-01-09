@@ -20,14 +20,13 @@ import Orders from './Orders.svelte'
 import Positions from './Positions.svelte'
 
 import { positions, orders } from '@lib/stores'
-import { executeOrders } from '@api/orders'
 
 let allColumns = {
 		orders: [
 			//{key: 'orderId', gridTemplate: '0.4fr', sortable: true},
-			{key: 'timestamp', gridTemplate: '1.75fr', sortable: true},
-			{key: 'isLong', gridTemplate: '0.5fr', sortable: true},
-			{key: 'market', gridTemplate: '1fr', sortable: true},
+			{key: 'timestamp', gridTemplate: '2.2fr', sortable: true},
+			{key: 'isLong', gridTemplate: '1.2fr', sortable: true},
+			{key: 'market', gridTemplate: '1.2fr', sortable: true},
 			{key: 'price', gridTemplate: '0.85fr', sortable: true},
 			{key: 'size', gridTemplate: '1fr', sortable: true},
 			{key: 'margin', gridTemplate: '1fr', sortable: true},
@@ -36,9 +35,9 @@ let allColumns = {
 			{key: 'tools', gridTemplate: '75px', sortable: false, permanent: true}
 		],
 		positions: [
-			{key: 'timestamp', gridTemplate: '1.75fr', sortable: true},
-			{key: 'isLong', gridTemplate: '0.5fr', sortable: true},
-			{key: 'market', gridTemplate: '1fr', sortable: true},
+			{key: 'timestamp', gridTemplate: '2.2fr', sortable: true},
+			{key: 'isLong', gridTemplate: '1.2fr', sortable: true},
+			{key: 'market', gridTemplate: '1.2fr', sortable: true},
 			{key: 'price', gridTemplate: '0.85fr', sortable: true},
 			{key: 'size', gridTemplate: '1fr', sortable: true},
 			{key: 'margin', gridTemplate: '1fr', sortable: true},
@@ -110,7 +109,6 @@ let panel = 'positions'
 		<a class:active={panel == 'positions'} on:click={() => {panel = 'positions'}}>Positions {#if $positions.length > 0}<span>({$positions.length})</span>{/if}</a>
 		<a class:active={panel == 'orders'} on:click={() => {panel = 'orders'}}>Orders {#if $orders.length > 0}<span>({$orders.length})</span>{/if}</a>
 		<a class:active={panel == 'history'} on:click={() => {panel = 'history'}}>History</a>
-		<a on:click={executeOrders}>exec orders</a>
 	</div>
 	{#if panel == 'positions'}<div class='positions'><Positions allColumns={allColumns['positions']}/></div>{/if}
 	{#if panel == 'orders'}<div class='orders'><Orders allColumns={allColumns['orders']}/></div>{/if}

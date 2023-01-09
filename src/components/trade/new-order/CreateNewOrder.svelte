@@ -40,51 +40,59 @@
 
 <!-- svelte-ignore a11y-missing-attribute -->
 <div class="create-new-order">
-  <div class="header">
-    <div class="left">
-      Available: <a on:click={() => (size.set($maxSize))}>{formatForDisplay($maxSize)}</a>
+  <div class='new-order'>  
+    <div class="header">
+      <div class="left">
+        <div class='max-size-label'>Available:</div>
+        <a on:click={() => (size.set($maxSize))}>{formatForDisplay($maxSize)}</a>
+      </div>
+      <div class="trigger-tpsl right">
+        <a on:click|stopPropagation={() => showModal('TriggerPrice')}>
+          {#if $orderType == 0}
+            +Trigger Price
+          {:else}
+            {`Trigger: ${$price ? $price : `0`}`}
+          {/if}
+        </a>
+        <a on:click|stopPropagation={() => showModal('TPSL')}>
+          {#if $hasTPSL == false}
+          +TP/SL
+          {:else}
+            {`${$tpPrice ? `TP: ${$tpPrice}` : `+TP`} / ${$slPrice ? `SL: ${$slPrice}` : `+SL`}`}
+          {/if}
+        </a>
+      </div>
     </div>
-    <div class="right">
-      
-      <a on:click|stopPropagation={() => showModal('TriggerPrice')}>+ Trigger Price</a> | 
-      <a on:click|stopPropagation={() => showModal('TPSL')}>+ TP/SL</a>
-
+    <div class='input-container'>
+      <Input label={'Size'} bind:value={$size} />
+    </div>
+    <div class='buttons'>
+      <button class="secondary" on:click|stopPropagation={() => submitOrderType('short')}>Sell/Short</button>
+      <button class="primary" on:click|stopPropagation={() => submitOrderType('long')}>Buy/Long</button>
     </div>
   </div>
-  <div class='input-tpsl-container'>
-    <div class='size-slider-limitprice-container'>
-      <div class='input-container'>
-        <Input label={'Size'} bind:value={$size} />
-      </div>
-      <div class='slider-container'>
-          <Slider bind:value={$size} maxValue={$maxSize} bind:isActive={sizeHighlighted} isSecondaryColor={false} nullValue={true} />
-          <!-- <Slider bind:value={$size} maxValue={$maxSize} bind:isActive={sizeHighlighted} isSecondaryColor={!$isLong} nullValue={true} /> -->
-      </div>
+  <div class='margin-fee-container'>
+    <div class='margin'>
+      <div>Margin</div>
+      <div>{formatForDisplay($margin)} {$currencyName}</div>
     </div>
-    
-  </div>
-  <div class='buttons'>
-		<button class="secondary" on:click|stopPropagation={() => submitOrderType('short')}>Sell/Short</button>
-		<button class="primary" on:click|stopPropagation={() => submitOrderType('long')}>Buy/Long</button>
-	</div>
-  <div class='flex containerborders'>
-    <div class='flex container sides'>
-      <div class='flex'>Margin</div>
-      <div class='flex right'>{formatForDisplay($margin)} {$currencyName}</div>
-    </div>
-    <div class='flex container sides'>
-      <div class='flex'>{$selectedMarketInfo.fee ? `Fee (${(100 * $selectedMarketInfo.fee) / BPS_DIVIDER}%)` : 'Fee (---)'}</div>
-      <div class='flex right'>{$selectedMarketInfo.fee ? `${formatForDisplay($size * ($selectedMarketInfo.fee / BPS_DIVIDER))} ${$currencyName}` : `0 ${$currencyName}`}</div>
+    <div class='fee'>
+      <div>{$selectedMarketInfo.fee ? `Fee (${(100 * $selectedMarketInfo.fee) / BPS_DIVIDER}%)` : 'Fee (---)'}</div>
+      <div>{$selectedMarketInfo.fee ? `${formatForDisplay($size * ($selectedMarketInfo.fee / BPS_DIVIDER))} ${$currencyName}` : `0 ${$currencyName}`}</div>
     </div>
   </div>
 </div>
 
 <style>
+  a {
+    color: var(--primary);
+  }
   .header {
     height: 40px;
     display: flex;
+    flex-direction: row;
     align-items: center;
-    padding: 0 20px;
+    margin-bottom: -10px;
     font-weight: 600;
     text-transform: uppercase;
     font-size: 85%;
@@ -95,105 +103,73 @@
     display: flex;
     flex-direction: row;
   }
-  .left .item {
-    margin: 0 5px;
-    padding: 0 0 3px;
-    cursor: pointer;
+  .new-order {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
   }
-  .left .item:hover {
-    color: var(--primary);
+  .max-size-label {
+    margin-right: 6px;
   }
-  .left .item.selected {
-    color: var(--primary);
-    border-bottom: 1px solid var(--primary);
+  .trigger-tpsl {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
   }
   .input-container {
-    margin: 10px;
-    margin-top: 5px;
-  }
-  .input-container-tpsl {
-    margin-right: 10px;
-    margin-left: 0px;
-    margin-top: 5px;
     display: flex;
     flex-direction: row;
-    gap: 5px;
-  }
-  .size-slider-limitprice-container {
-    flex-basis: 1fr;
-    flex-grow: 1;
-  }
-  .input-gain-loss {
-    width: 275px;
-    height: 46px;
-		position: relative;
-		font-size: 85%;
-  }
-  .slider-container {
-    margin: 15px;
-     display: none;
-  }
-  .input-tpsl-container {
-    display: flex;
-    flex-direction: row;
-  }
-  .tpsl-container-flex {
-    width: 50%;
   }
 	.buttons {
 		display: flex;
+    flex-direction: row;
+    gap: 10px;
     justify-content: space-around;
 		align-items: center;
-		margin: -5px 6px 5px 6px;
+    margin-bottom: 10px;
 	}
 	button {
 		flex: 50%;
-		margin: 5px;
 		padding: 10px 5px;
 		width: 75%;
 	}
-  .flex {
+  .margin-fee-container {
     display: flex;
     justify-content: space-between;
     text-transform: uppercase;
     font-size: 14px;
-  }
-  .flex.containerborders {
-    margin-bottom: -2px;
     border-top-style: solid;
     border-top-width: 1px;
-    border-bottom-style: solid;
-    border-bottom-width: 1px;
     border-color: var(--layerDark);
+    gap: 10px;
   }
-  .flex.container {
-    padding: 10px;
-  }
-  .flex.right {
+  .fee {
     display: flex;
-    justify-self: end;
+    justify-content: space-between;
+    flex-basis: 50%;
+    width: 150px;
+    max-width: 50%;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    margin-right: 10px;
+    white-space: nowrap;
     overflow: hidden;
-    flex-grow: 0;
+    text-overflow: ellipsis;
   }
-  .flex.container.sides {
-    flex-basis: 35%;
-    max-width: 35%;
+  .margin {
+    display: flex;
+    justify-content: space-between;
+    flex-basis: 50%;
+    width: 150px;
+    max-width: 50%;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    margin-left: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
-  .flex.container.middle {
-    flex-basis: 25%;
-    max-width: 25%;
-  }
-
-  .flex.container.middle.borders {
-    border-left-style: solid;
-    border-left-width: 1px;
-    border-right-style: solid;
-    border-right-width: 1px;
-    border-color: var(--layerDark);
-  }
-
-
-
-  
 
 </style>

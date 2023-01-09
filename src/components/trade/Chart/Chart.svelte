@@ -20,12 +20,12 @@
     chart = createChart(document.getElementById('lightweight-graph'),
     {
       layout: {
-            background: { color: '#1b1f22' },
+            background: { color: '#24292e' },
             textColor: '#DDD',
         },
         grid: {
-            vertLines: { color: '#16191c' },
-            horzLines: { color: '#16191c' },
+            vertLines: { color: '#1e2226' }, //maybe #16191c
+            horzLines: { color: '#1e2226' }, //maybe #16191c
         },
     }
     )
@@ -33,7 +33,7 @@
     areaSeries = chart.addAreaSeries()
 
     chart.priceScale().applyOptions({
-    borderColor: '#444444',
+      borderColor: '#1e2226',
     });
 
     chart.timeScale().applyOptions({
@@ -130,8 +130,8 @@ $: getChartData($selectedMarketInfo.symbol)
 <style>
   .chart {
     margin-right: -1px;
-    margin-bottom: -1px;
-		min-height: 100px; 
+    margin-bottom: 0px;
+		min-height: 100px;
   }
 
 </style>
