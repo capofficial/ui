@@ -8,7 +8,7 @@ export const DEFAULT_ORDERS_SORT_KEY = ['orderId', true];
 export const DEFAULT_POSITIONS_SORT_KEY = ['timestamp', true];
 export const DEFAULT_HISTORY_SORT_KEY = ['timestamp', true];
 export const DEFAULT_HISTORY_COUNT = 50;
-export const DEFAULT_CHAIN_ID = 31337;
+export const DEFAULT_CHAIN_ID = 42161;
 export const CHAINDATA = {
 	31337: {
 		label: 'localhost',
@@ -38,14 +38,14 @@ export const CHAINDATA = {
 	42161: {
 		label: 'arbitrum',
 		explorer: 'https://arbiscan.io',
-		rpc: 'https://arb1.arbitrum.io/rpc', // for walletconnect
+		rpc: 'https://rpc.ankr.com/arbitrum', // for walletconnect
 		currencyName: 'USDC',
-		currencyAddress: '', // USDC address
+		currencyAddress: '0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8', // USDC address
 		currencyDecimals: 6, // USDC
 		contracts: {
-			Trade: '0x0000000000000000000000000000000000000000',
-			Pool: '0x0000000000000000000000000000000000000000',
-			Store: '0x0000000000000000000000000000000000000000',
+			Trade: '0x64132d85842f1A88A086D173CB66A66931963622',
+			Pool: '0x79Dd91477F63f7dB5DDf70DF9C3ff375EE8D1c71',
+			Store: '0xf16033d20ADDa47Dc99eA291D0F4C4FeF2fF47af',
 		},
 		alchemy: {
 			key: 'gDY8gANK8VJAg508BzJbdCpmZ4N43IZP',

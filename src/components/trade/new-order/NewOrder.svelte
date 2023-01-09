@@ -33,7 +33,7 @@
   $: fetchFundingData($selectedMarketInfo.symbol)
 
   function setPriceInTitle(marketInfo) {
-    if (!marketInfo) return;
+    if (!marketInfo || !marketInfo.price || !marketInfo.symbol) return;
     setPageTitle(`${marketInfo.price} ${marketInfo.symbol}`);
   }
 
