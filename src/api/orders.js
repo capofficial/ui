@@ -97,6 +97,7 @@ export async function updateOrder(orderId, price) {
 		if (receipt && receipt.status == 1) {
 			showToast('Order updated.');
 			getUserOrders();
+			return true;
 		}
 	} catch(e) {
 		showError(e);

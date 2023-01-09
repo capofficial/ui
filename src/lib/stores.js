@@ -89,7 +89,9 @@ export const leverage = derived([selectedMarketInfo], ([$selectedMarketInfo]) =>
 
 export const maxSize = derived([freeMargin, leverage, selectedMarketInfo], ([$freeMargin, $leverage, $selectedMarketInfo]) => {
 	if (!$leverage || !$selectedMarketInfo || !$freeMargin) return 0;
-	return $freeMargin * $leverage * (1 - $selectedMarketInfo.fee / BPS_DIVIDER);
+	let ms = $freeMargin * $leverage * (1 - $selectedMarketInfo.fee / BPS_DIVIDER);
+	if (ms < 0) ms = 0;
+	return ms;
 }, 0);
 
 export const margin = derived([size, leverage], ([$size, $leverage]) => {
