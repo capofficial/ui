@@ -56,7 +56,7 @@ export async function submitOrder(params) {
 	price = parseUnits(price, 18);
 
 	if (orderType == 0) price = parseUnits(0, 18);
-	if (price == 0) orderType = 0;
+	if (!price || price == 0) orderType = 0;
 	if (isReduceOnly) margin = parseUnits(0);
 
 	tpPrice = hasTPSL ? parseUnits(tpPrice, 18) : 0;
@@ -143,8 +143,6 @@ export async function closePosition(params) {
 	- closing a position submits a reduce only order in the opposite direction, similar to the current private beta
 	- it should allow closing at a price, e.g. TP (limit order) or SL (stop order)
 	*/
-
-	console.log("ORDER PARAMS", params)
 
 	let market = params.market
 	let margin = 0;

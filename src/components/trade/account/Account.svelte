@@ -34,7 +34,6 @@
 		padding: 0 20px;
 		border-bottom: 1px solid var(--layerDark);
 		font-weight: 600;
-		text-transform: uppercase;
 	}
 	.data {
 		display: flex;

@@ -12,6 +12,8 @@
 		orderType.set(type); 
 	};
 
+	setOrderType($orderType || 1);
+
 </script>
 
 <style>
@@ -19,15 +21,15 @@
 .options-container {
 	display: flex;
 	flex-direction: row;
-	justify-content: space-between;
 	margin-bottom: 20px;
+	gap:10px;
 }
 
 .button {
 	padding: 8px 0px 8px 0px;
 	text-align: center;
 	border-radius: var(--base-radius);
-	width: 72px;
+	flex:1;
 }
 
 .option {
@@ -40,11 +42,6 @@
 	pointer-events: none;
 }
 
-.market-order-text {
-	padding-top: 4px;
-	padding-bottom: 5px;
-}
-
 </style>
 
 <Modal title={'Set Trigger Price'} width={280}>
@@ -52,12 +49,6 @@
 	<div class='container'>
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
 		<div class='options-container'>
-			<div
-	        class={$orderType == 0 ? 'button option-selected' : 'button option'}
-	        on:click={() => setOrderType(0)}
-	      >
-	        Market
-	      </div>
 	      <div
 	        class={$orderType == 1 ? 'button option-selected' : 'button option'}
 	        on:click={() => setOrderType(1)}
@@ -73,12 +64,7 @@
 		</div>
 
 		<div class="group">
-			{#if $orderType === 0}
-				<div class='market-order-text'>
-				Your order will be executed at the Market Price.
-				</div>
-				<!--<Input label={'Price'} value='Market Price' disabled="true" />-->
-			{:else if $orderType === 1}
+			{#if $orderType === 1}
 				<Input label={'Limit Price'} bind:value={$price}/>
 			{:else if $orderType === 2}
 				<Input label={'Stop Price'} bind:value={$price}/>

@@ -15,8 +15,6 @@
 
     $: getUserAllowance($address);
 
-    $: console.log('$allowance', $allowance);
-
 </script>
 
 <style>

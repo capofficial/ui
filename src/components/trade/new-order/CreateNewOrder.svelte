@@ -7,7 +7,7 @@
 	import { getUserBalance } from '@api/account'
   import { selectedMarketInfo } from '@lib/stores'
   import { BPS_DIVIDER } from '@lib/config'
-	import { selectedMarket, size, price, leverage, currencyName, margin, maxSize, tpPrice, slPrice, hasTPSL, isReduceOnly, orderType, isLong } from '@lib/stores'
+	import { selectedMarket, size, price, currencyName, margin, maxSize, tpPrice, slPrice, hasTPSL, isReduceOnly, orderType, isLong } from '@lib/stores'
   import { submitOrder } from '@api/orders'
   import { formatForDisplay } from '@lib/formatters'
   import { showModal } from '@lib/ui'
@@ -64,14 +64,15 @@
     <div class="header">
       <div class="left">
         <div class='max-size-label'>Available:</div>
-        <a on:click={() => (size.set($maxSize))}>{formatForDisplay($maxSize)}</a>
+        <a on:click={() => (size.set($maxSize))}>{formatForDisplay($maxSize)} {$currencyName}</a>
       </div>
       <div class="trigger-tpsl right">
         <a on:click|stopPropagation={() => showModal('TriggerPrice')}>
-          {#if $orderType == 0 || $price == 0}
+          {#if $orderType == 0 || !$price || $price == 0}
             +Trigger Price
           {:else}
-            {`Trigger: ${$price}`}
+            {#if $orderType == 1}Limit: {$price}{/if}
+            {#if $orderType == 2}Stop: {$price}{/if}
           {/if}
         </a>
         <a on:click|stopPropagation={() => showModal('TPSL')}>
@@ -84,7 +85,7 @@
       </div>
     </div>
     <div class='input-container'>
-      <Input label={'Size'} bind:value={$size} />
+      <Input label={`Size (${$currencyName})`} bind:value={$size} />
     </div>
     <div class='buttons'>
         <Button isRed={true} isLoading={sellLoading} on:click={() => submitOrderType('short')} label="Sell/Short" />
