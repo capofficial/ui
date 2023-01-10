@@ -15,7 +15,7 @@ const ERROR_STRINGS = {
 	'!order-type': 'The order type is not valid.',
 	'!price': 'Price is required.',
 	'!asset': 'This asset is not supported.',
-	'!min-size': 'The order size is below the minimum size (about $10 or 0.01 ETH).',
+	'!min-size': 'The order size is below the minimum size (about $20).',
 	'!market-exists': 'This market does not exist.',
 	'!market-closed': 'This market is currently closed.',
 	'!banned-user': 'This address is banned from submitting orders.',
