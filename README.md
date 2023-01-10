@@ -1,3 +1,7 @@
+**Moved to https://github.com/0xcap/ui-v4**.
+
+---
+
 # CAP UI Web Client
 
 ## TODO
