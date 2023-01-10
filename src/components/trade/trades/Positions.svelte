@@ -57,7 +57,13 @@
       <Cell>{formatForDisplay(formatUnits(position.price, 18))}</Cell>
       <Cell>{formatForDisplay(formatUnits(position.size, 6))}</Cell>
       <Cell>{formatForDisplay(formatUnits(position.margin, 6))}</Cell>
-      <Cell>{formatForDisplay(formatUnits(position.upl, 6))}</Cell>
+	  {#if position.upl > 0}
+	  	<Cell hasClass='green'>+{formatForDisplay(formatUnits(position.upl, 6))}</Cell>
+	  {:else if position.upl < 0}
+      	<Cell hasClass='red'>{formatForDisplay(formatUnits(position.upl, 6))}</Cell>
+	  {:else}
+	  	<Cell>{formatForDisplay(formatUnits(position.upl, 6))}</Cell>
+	  {/if}
       <!--<Cell>{formatForDisplay(position.fundingTracker)}</Cell>-->
       <Cell isTools={true}>
 				<!--<a >{@html PENCIL_ICON}</a>-->
